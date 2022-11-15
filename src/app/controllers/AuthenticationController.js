@@ -1,8 +1,8 @@
 const TaiKhoan = require('../models/TaiKhoan');
 const { mutipleMongooseToObject } = require('../../util/mongoose');
 
-const argon2 = require('argon2')
-const jwt = require('jsonwebtoken')
+const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
 
 class AuthenticationController {
     index(req, res, next) {
