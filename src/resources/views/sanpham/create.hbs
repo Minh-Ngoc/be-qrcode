@@ -1,0 +1,43 @@
+<div class="mt-4 mb-5">
+    <h3>Thêm sản phẩm</h3>
+
+    <form method="POST" action="/sanpham/store">
+        <div class="form-group">
+            <label>Công đoạn chế biến:</label>
+            <select class="form-select" name="cdcbId" id="validationDefault04">
+                    <option disabled selected>....</option>
+
+                    {{#each congdoanchebien}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Ao nuôi:</label>
+            <select class="form-select" name="anId" id="validationDefault04">
+                    <option disabled selected>....</option>
+
+                    {{#each aonuoi}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+        
+
+        <div class="form-group">
+            <label for="ten">Tên sản phẩm:</label>
+            <input type="text" class="form-control mt-1" id="ten" name="ten">
+        </div>
+        <div class="mb-3 form-group">
+            <label for="formFile" class="form-label">Hình ảnh:</label>
+            <input class="form-control" type="file" id="formFile" name="hinhanh">
+        </div>
+        <div class="form-floating form-group">
+            <label for="floatingTextarea">Mô tả:</label>
+            <textarea class="form-control" placeholder="Mô tả" id="floatingTextarea" name="mota"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Thêm sản phẩm</button>
+    </form>
+</div>

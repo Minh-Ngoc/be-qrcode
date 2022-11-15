@@ -1,0 +1,29 @@
+<div class="mt-4 mb-5">
+    <h3>Thêm ao nuôi</h3>
+
+    <form method="POST" action="/aonuoi/store">
+
+        <div class="form-group">
+            <label for="ten">Tên ao nuôi:</label>
+            <input type="text" class="form-control mt-1" id="ten" name="ten">
+        </div>
+        
+        <div class="form-group">
+            <label for="dientich">Diện tích:</label>
+            <input type="text" class="form-control mt-1" id="dientich" name="dientich">
+        </div>
+
+        <div class="form-group">
+            <label>Cơ sở nuôi trồng:</label>
+            <select class="form-select" name="csntId" id="validationDefault04">
+                    <option disabled selected>....</option>
+
+                    {{#each cosonuoitrongs}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Thêm ao nuôi</button>
+    </form>
+</div>

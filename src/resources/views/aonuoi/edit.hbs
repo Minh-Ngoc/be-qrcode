@@ -1,0 +1,20 @@
+<div class="mt-4">
+    <h3>Cập nhật tài khoản</h3>
+
+    <form class="mt-4" method="POST" action="/taikhoan/{{taikhoan._id}}?_method=PUT">
+        <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <input type="text" class="form-control" value="{{taikhoan.username}}" id="username" name="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input type="password" class="form-control" id="password" name="password">{{taikhoan.password}}>
+        </div>
+        <div class="form-group">
+            <label for="ten">Họ và tên</label>
+            <input type="text" class="form-control" value="{{taikhoan.ten}}" id="ten" name="ten">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Lưu lại</button>
+    </form>
+</div>

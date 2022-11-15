@@ -1,0 +1,12 @@
+<div class="mt-4">
+    <h3>Cập nhật loại con giống</h3>
+
+    <form class="mt-4" method="POST" action="/loaicongiong/{{loaicongiong._id}}?_method=PUT">
+        <div class="form-group">
+            <label for="ten">Tên loại con giống:</label>
+            <input type="text" class="form-control" value="{{loaicongiong.ten}}" id="ten" name="ten">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Lưu lại</button>
+    </form>
+</div>

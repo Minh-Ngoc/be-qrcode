@@ -1,0 +1,41 @@
+<div class="mt-4">
+    <h3>Thêm con giống</h3>
+
+    <form method="POST" action="/congiong/store">
+        <div class="form-group">
+            <label for="ten">Tên con giống:</label>
+            <input type="text" class="form-control mt-1" id="ten" name="ten">
+        </div>
+        <div class="mb-3 form-group">
+            <label for="formFile" class="form-label">Hình ảnh:</label>
+            <input class="form-control" type="file" id="formFile" name="hinhanh">
+        </div>
+        <div class="form-floating form-group">
+            <label for="floatingTextarea">Mô tả:</label>
+            <textarea class="form-control" placeholder="Mô tả" id="floatingTextarea" name="mota"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Loại con giống:</label>
+            <select class="form-select" name="lcgId" id="validationDefault04">
+                    <option disabled selected>....</option>
+
+                    {{#each loaicongiongs}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Nhà cung cấp con giống:</label>
+            <select class="form-select" name="ncccgId" id="validationDefault04">
+                    <option disabled selected>....</option>
+
+                    {{#each ncccongiongs}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Thêm con giống</button>
+    </form>
+</div>

@@ -1,0 +1,45 @@
+<div class="mt-4">
+    <h3>Thêm tài khoản</h3>
+
+    <form method="POST" action="/taikhoan/store">
+        <div class="form-group">
+            <label for="username">Tên đăng nhập:</label>
+            <input type="text" class="form-control mt-1" id="username" name="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Mật khẩu:</label>
+            <input type="password" class="form-control mt-1" id="password" name="password">
+        </div>
+        <div class="form-group">
+            <label for="ten">Họ và tên:</label>
+            <input type="text" class="form-control mt-1" id="ten" name="ten">
+        </div>
+        <div class="form-group">
+            <label for="ten">Giới tính:</label>
+            <div class="d-flex mt-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gioitinh" id="flexRadioDefault1" value="Nam">
+                    <label class="form-check-label" for="flexRadioDefault1">Nam</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gioitinh" id="flexRadioDefault2" value="Nữ">
+                    <label class="form-check-label" for="flexRadioDefault2">Nữ</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="sdt">Số điện thoại:</label>
+            <input type="text" class="form-control mt-1" id="sdt" name="sdt">
+        </div>
+        <div class="form-group">
+            <label for="diachi">Địa chỉ:</label>
+            <input type="text" class="form-control mt-1" id="diachi" name="diachi">
+        </div>
+        <div class="mb-3 form-group">
+            <label for="formFile" class="form-label">Hình ảnh:</label>
+            <input class="form-control" type="file" id="formFile" name="hinhanh">
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3 mb-5">Thêm tài khoản</button>
+    </form>
+</div>

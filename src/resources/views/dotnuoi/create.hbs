@@ -1,0 +1,64 @@
+<div class="mt-4 mb-5">
+    <h3>Thêm đợt nuôi</h3>
+
+    <form method="POST" action="/dotnuoi/store">
+
+        <div class="form-group">
+            <label>Con giống:</label>
+            <select class="form-select" name="congiongId" id="validationDefault04">
+                    <option disabled selected>Chọn con giống...</option>
+
+                    {{#each congiongs}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Ao nuôi:</label>
+            <select class="form-select" name="aonuoiId" id="validationDefault04">
+                    <option disabled selected>Chọn ao nuôi...</option>
+
+                    {{#each aonuois}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ten">Tên đợt nuôi:</label>
+            <input type="text" class="form-control mt-1" id="ten" name="ten">
+        </div>
+        <div class="form-group">
+            <label for="namnuoi">Năm nuôi</label>
+            <input type="text" class="form-control mt-1" id="namnuoi" name="namnuoi">
+        </div>
+        <div class="form-group">
+            <label for="thoidiem">Thời điểm:</label>
+            <input type="text" class="form-control mt-1" id="thoidiem" name="thoidiem">
+        </div>
+        <div class="form-group">
+            <label for="trangthai">Trạng thái:</label>
+            <input type="text" class="form-control mt-1" id="trangthai" name="trangthai">
+        </div>
+        <div class="form-group">
+            <label for="tinhtrang">Tình trạng:</label>
+            <input type="text" class="form-control mt-1" id="tinhtrang" name="tinhtrang">
+        </div>
+
+        <div class="form-group">
+            <label for="soluong">Số lượng con giống:</label>
+            <input type="text" class="form-control mt-1" id="soluong" name="soluong">
+        </div>
+        <div class="form-group">
+            <label for="ngaytuoi">Ngày tuổi:</label>
+            <input type="text" class="form-control mt-1" id="ngaytuoi" name="ngaytuoi">
+        </div>
+        <div class="form-group">
+            <label for="chatluong">Chất lượng:</label>
+            <input type="text" class="form-control mt-1" id="chatluong" name="chatluong">
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Thêm đợt nuôi</button>
+    </form>
+</div>

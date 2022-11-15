@@ -1,0 +1,99 @@
+<div class="mt-4">
+    <div>
+      <a href="/me/stored/dotnuoi">Danh sách đợt nuôi</a>
+      <h3>đợt nuôi đã xóa</h3>
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên đợt nuôi</th>
+                <th scope="col">Năm nuôi</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">QR Image</th>
+                <th scope="col" colspan="2">Thời điểm xóa</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each dotnuois}}
+            <tr>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.ten}}</td>
+                <td>{{this.namnuoi}}</td>
+                <td>{{this.trangthai}}</td>
+                <td>
+                  <img style="width: 100px;" src="{{this.qrImage}}" class="img-thumbnail" alt="...">
+                </td>
+                <td>{{this.deletedAt}}</td>
+                <td>
+                    <a href="" class="btn btn-link btn-restore" data-id="{{this._id}}">Khôi phục</a>
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#delete-dotnuoi-modal">Xóa vĩnh viễn</a>
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="5" class="text-center">
+                Thùng rác trống.
+                <a href="/me/stored/dotnuoi">Danh sách đợt nuôi</a>
+              </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Confirm delete dotnuoi --}}
+<div id="delete-dotnuoi-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa khóa học?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Hành động này không thể khôi phục. Bạn vẫn muốn xóa khóa học này?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button id="btn-delete-dotnuoi" type="button" class="btn btn-danger">Xóa vĩnh viễn</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form name="delete-dotnuoi-form" method="POST"></form>
+<form name="restore-dotnuoi-form" method="POST"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dotnuoiId;
+        var deleteForm = document.forms['delete-dotnuoi-form'];
+        var restoreForm = document.forms['restore-dotnuoi-form'];
+        var btnDeletedotnuoi = document.getElementById('btn-delete-dotnuoi');
+        var restoreBtn = $('.btn-restore');
+
+        // When dialog confirm clicked
+        $('#delete-dotnuoi-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            dotnuoiId = button.data('id');
+        });
+        
+        // When delete dotnuoi btn clicked
+        btnDeletedotnuoi.onclick = function () {
+            deleteForm.action = '/dotnuoi/' + dotnuoiId + '/force?_method=DELETE';
+            deleteForm.submit();
+        }
+
+        // Restore btn clicked
+        restoreBtn.click(function (e) {
+          e.preventDefault();
+          
+          var dotnuoiId = $(this).data('id');
+          restoreForm.action = '/dotnuoi/' + dotnuoiId + '/restore?_method=PATCH';
+          restoreForm.submit();
+        });
+    });
+</script>

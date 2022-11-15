@@ -1,0 +1,96 @@
+<div class="mt-2">
+    <div>
+      <h3>Danh sách cơ sở nuôi trồng</h3>
+      <div class="subnav">
+        {{!-- <a href="/me/trash/cosonuoitrong">Thùng rác ({{deletedCount}})</a> --}}
+        <a href="/cosonuoitrong/create">Thêm cơ sở nuôi trồng mới</a>
+      </div>
+    </div>
+
+    <table class="table mt-4 text-center">
+        <thead>
+            <tr class="align-middle">
+                <th scope="col">#</th>
+                <th scope="col">Tên CSNT</th>
+                <th scope="col">Chủ sở hữu</th>
+                <th scope="col">Địa chỉ</th>
+                <th scope="col">Số điện thoại</th>
+                <th scope="col">Diện tích</th>
+                <th scope="col">Diện tích mặt nước</th>
+                <th scope="col">Năm đăng ký</th>
+                {{!-- <th scope="col">Tài khoản</th> --}}
+                <th scope="col" colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each cosonuoitrongs}}
+            <tr class="align-middle">
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.ten}}</td>
+                <td>{{this.chusohuu}}</td>
+                <td>{{this.diachi}}</td>
+                <td>{{this.sdt}}</td>
+                <td>{{this.dientich}}</td>
+                <td>{{this.dtmatnuoc}}</td>
+                <td>{{this.namdangky}}</td>
+                {{!-- <td>{{this.tkId}}</td> --}}
+                <td class="align-baseline">
+                    <a href="/cosonuoitrong/{{this._id}}/edit" class="btn btn-link">Sửa</a>
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#delete-course-modal">Xóa</a>
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="10" class="text-center">
+                Hiện chưa có cơ sở nuôi trồng nào.
+                <a href="/cosonuoitrong/create">Thêm cơ sở nuôi trồng mới</a>
+              </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Confirm delete course --}}
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa cơ sở nuôi trồng?</h5>
+        <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close">
+          <span class="fs-6" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa cơ sở nuôi trồng này?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa bỏ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Delete hidden form --}}
+<form name="delete-course-form" method="POST"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var courseId;
+        var deleteForm = document.forms['delete-course-form'];
+        var btnDeleteCourse = document.getElementById('btn-delete-course');
+
+        // When dialog confirm clicked
+        $('#delete-course-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            courseId = button.data('id');
+        });
+        
+        // When delete course btn clicked
+        btnDeleteCourse.onclick = function () {
+            deleteForm.action = '/cosonuoitrong/' + courseId + '?_method=DELETE';
+            deleteForm.submit();
+        }
+    });
+</script>

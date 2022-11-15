@@ -1,0 +1,94 @@
+
+<div class="mt-1">
+    <div>
+      <h3>Danh sách tài khoản</h3>
+      <div class="subnav">
+        {{!-- <a href="/me/trash/taikhoan">Thùng rác ({{deletedCount}})</a> --}}
+        <a href="/taikhoan/create">Thêm tài khoản mới</a>
+      </div>
+    </div>
+
+    <table class="table mt-4 rp-table" id="rp-table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên đăng nhập</th>
+                <th scope="col">Mật khẩu</th>
+                <th scope="col">Họ và tên</th>
+                <th scope="col" colspan="2">Ngày tạo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each taikhoans}}
+            <tr>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.username}}</td>
+                <td>{{this.password}}</td>
+                <td>{{this.ten}}</td>
+                <td>{{this.createdAt}}</td>
+                <td>
+                    <a href="/taikhoan/{{this._id}}/edit" class="btn btn-link">Sửa</a>
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#delete-taikhoan-modal">Xóa</a>
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="5" class="text-center">
+                Hiện chưa có tài khoản nào.
+                <a href="/taikhoan/create">Thêm tài khoản</a>
+              </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Confirm delete taikhoan --}}
+<div id="delete-taikhoan-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa khóa học?</h5>
+        <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close">
+          <span class="fs-5" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa khóa học này?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button id="btn-delete-taikhoan" type="button" class="btn btn-danger">Xóa bỏ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Delete hidden form --}}
+<form name="delete-taikhoan-form" method="POST"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var taikhoanId;
+        var deleteForm = document.forms['delete-taikhoan-form'];
+        var btnDeletetaikhoan = document.getElementById('btn-delete-taikhoan');
+
+        // When dialog confirm clicked
+        $('#delete-taikhoan-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            taikhoanId = button.data('id');
+        });
+        
+        // When delete taikhoan btn clicked
+        btnDeletetaikhoan.onclick = function () {
+            deleteForm.action = '/taikhoan/' + taikhoanId + '?_method=DELETE';
+            deleteForm.submit();
+        }
+    });
+    $(document).ready(function () {
+    $('#rp-table').DataTable({
+      "scrollX": true
+    });
+    $('.dataTables_length').addClass('bs-select');
+  });
+</script>

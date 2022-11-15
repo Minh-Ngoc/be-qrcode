@@ -1,0 +1,110 @@
+<div class="mt-2">
+    <div>
+      <h3>Danh sách đợt nuôi</h3>
+      <div class="subnav">
+        <a href="/me/trash/dotnuoi">Thùng rác ({{deletedCount}})</a>
+        <a href="/dotnuoi/create">Thêm đợt nuôi mới</a>
+      </div>
+    </div>
+
+    <table class="table mt-4 text-center">
+        <thead>
+            <tr class="align-middle">
+                <th scope="col">#</th>
+                <th scope="col">Tên đợt nuôi</th>
+                <th scope="col">Năm nuôi</th>
+                <th scope="col">Thời điểm</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Tình trạng</th>
+                <th scope="col">Mã QR</th>
+                <th scope="col">Cấp mã QR</th>
+                <th scope="col">Ao nuôi</th>
+                <th scope="col">Con giống</th>
+                {{!-- <th scope="col" >Chi tiết con giống</th> --}}
+                <th scope="col" >Aciton</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each dotnuois}}
+            <tr class="align-middle">
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{ten}}</td>
+                <td>{{namnuoi}}</td>
+                <td>{{thoidiem}}</td>
+                <td>{{trangthai}}</td>
+                <td>{{tinhtrang}}</td>
+                <td> {{checkImage qrImage}}</td>
+                <td>{{checkQR qrImage _id}}</td>
+                <td style="max-width: 100px; overflow-wrap: break-word;">
+                  {{#each aonuois}}
+                    {{ten}}
+                  {{/each}}
+                </td>
+                <td style="max-width: 100px; overflow-wrap: break-word;">
+                    {{#each ctcongiong}}
+                      {{congiongs.ten}}
+                    {{/each}}
+                </td>
+                {{!-- <td>
+                    <a href="/dotnuoi/{{_id}}/add-detail" class="btn btn-link">Thêm</a>
+                </td> --}}
+                <td>
+                    <a href="/dotnuoi/{{_id}}/edit" class="btn btn-link">Sửa</a>
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{_id}}" data-target="#delete-dotnuoi-modal">Xóa</a>
+                </td>
+            </tr>
+            {{else}}
+            <tr class="text-center">
+              <td colspan="12" >
+                Hiện chưa có đợt nuôi nào.
+                <a href="/dotnuoi/create">Thêm đợt nuôi mới</a>
+              </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Confirm delete dotnuoi --}}
+<div id="delete-dotnuoi-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa đợt nuôi?</h5>
+        <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close">
+          <span class="fs-6" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa đợt nuôi này?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button id="btn-delete-dotnuoi" type="button" class="btn btn-danger">Xóa bỏ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Delete hidden form --}}
+<form name="delete-dotnuoi-form" method="POST"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dotnuoiId;
+        var deleteForm = document.forms['delete-dotnuoi-form'];
+        var btnDeletedotnuoi = document.getElementById('btn-delete-dotnuoi');
+
+        // When dialog confirm clicked
+        $('#delete-dotnuoi-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            dotnuoiId = button.data('id');
+        });
+        
+        // When delete dotnuoi btn clicked
+        btnDeletedotnuoi.onclick = function () {
+            deleteForm.action = '/dotnuoi/' + dotnuoiId + '?_method=DELETE';
+            deleteForm.submit();
+        }
+    });
+</script>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Administrator</title>
+
+        {{!-- <link rel="stylesheet" href="/src/public/css/app.css"> --}}
+
+        <link rel="stylesheet" href="/css/app.css">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"> 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <div class="app mx-4">
+          <div class="col rp-body overflow-auto mb-5">
+            {{#each dotnuois}}
+              <div class="scan-qrcode mt-2">
+                <h2 style="line-height: 80px; text-align: center">THÔNG TIN NGUỒN GỐC THỦY SẢN</h2>
+                <div class="title-testqrcode">Đợt nuôi</div>
+                <table class="table mt-1">
+                  <thead>
+                    <tr class="align-middle">
+                      <th scope="col">Tên đợt nuôi</th>
+                      <th scope="col">Tên ao nuôi</th>
+                      <th scope="col">Diện tích</th>
+                      <th scope="col">Năm nuôi</th>
+                      <th scope="col">Thời điểm</th>
+                      <th scope="col">Trạng thái</th>
+                      <th scope="col">Tình trạng</th>
+                      <th scope="col">Mã QR</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="align-middle">
+                      <td>{{ten}}</td>
+                      <td>
+                        {{#each aonuois}}
+                          {{ten}}
+                        {{/each}}
+                      </td>
+                      <td>
+                        {{#each aonuois}}
+                          {{dientich}}
+                        {{/each}}
+                        </td>
+                      <td>{{namnuoi}}</td>
+                      <td>{{thoidiem}}</td>
+                      <td>{{trangthai}}</td>
+                      <td>{{tinhtrang}}</td>
+                      <td> {{checkImage qrImage}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="scan-qrcode ">
+                <div class="title-testqrcode">Con giống</div>
+                <table class="table mt-1">
+                  <thead>
+                      <tr class="align-middle">
+                          <th scope="col">Con giống</th>
+                          <th scope="col">Loại con giống</th>
+                          <th scope="col">Nhà cung cấp con giống</th>
+                          <th scope="col">Số lượng</th>
+                          <th scope="col">Ngày tuổi</th>
+                          <th scope="col">Chất lượng</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr class="align-middle">
+                          <td>
+                            {{#each ctcongiong}}
+                                  {{congiongs.ten}}
+                            {{/each}}
+                          </td>
+                          <td>
+                            {{#each loaicongiongs}}
+                                  {{ten}}
+                            {{/each}}
+                          </td>
+                          <td>
+                            {{#each ncccongiongs}}
+                                  {{ten}}
+                            {{/each}}
+                          </td>
+                        {{#each ctcongiong}}
+                          <td>{{soluong}}</td>
+                          <td>{{ngaytuoi}}</td>
+                          <td>{{chatluong}}</td>
+                        {{/each}}
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="scan-qrcode">
+                <div class="title-testqrcode">Cơ sở nuôi trồng</div>
+                <table class="table mt-1">
+                  <thead>
+                      <tr class="align-middle">
+                          <th scope="col">Tên CSNT</th>
+                          <th scope="col">Chủ sở hữu</th>
+                          <th scope="col">Địa chỉ</th>
+                          <th scope="col">Số điện thoại</th>
+                          <th scope="col">Diện tích</th>
+                          <th scope="col">Diện tích mặt nước</th>
+                          <th scope="col">Năm đăng ký</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr class="align-middle">
+                          {{#each cosonuoitrongs}}
+                            <td>{{ten}}</td>
+                            <td>{{chusohuu}}</td>
+                            <td>{{diachi}}</td>
+                            <td>{{sdt}}</td>
+                            <td>{{dientich}}</td>
+                            <td>{{dtmatnuoc}}</td>
+                            <td>{{namdangky}}</td>
+                          {{/each}}
+                      </tr>
+                  </tbody>
+                </table>
+              </div>  
+            {{/each}}
+          </div>
+        </div>
+
+    </body>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script src="https://kit.fontawesome.com/3fa6808f92.js" crossorigin="anonymous"></script>
+    
+
+
+</html>

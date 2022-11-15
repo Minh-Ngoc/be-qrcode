@@ -1,0 +1,40 @@
+<div class="mt-4">
+    <h3>Thêm chi tiết công đoạn chế biến</h3>
+
+    <form method="POST" action="/ctcongdoanchebien/store">
+        <div class="form-group">
+            <label>Công đoạn chế biến:</label>
+            <select class="form-select" name="cdcbId" id="validationDefault04">
+                    <option disabled selected>....</option>
+
+                    {{#each congdoanchebiens}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Sản phẩm:</label>
+            <select class="form-select" name="sanphamId" id="validationDefault04">
+                    <option disabled selected>....</option>
+
+                    {{#each sanphams}}
+                        <option value="{{this._id}}">{{this.ten}}</option>
+                    {{/each}}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="thoidiem">Thời điểm:</label>
+            <input type="text" class="form-control mt-1" id="thoidiem" name="thoidiem">
+        </div>
+        <div class="form-group">
+            <label for="cachxuly">Cách xử lý:</label>
+            <input type="text" class="form-control mt-1" id="cachxuly" name="cachxuly">
+        </div>
+        <div class="form-group">
+            <label for="congnghechebien">Công nghệ chế biến:</label>
+            <input type="text" class="form-control mt-1" id="congnghechebien" name="congnghechebien">
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Thêm chi tiết công đoạn chế biến</button>
+    </form>
+</div>

@@ -1,0 +1,20 @@
+<div class="mt-4 mb-5">
+    <h3>Thêm chi tiết con giống</h3>
+
+    <form method="POST" action="/dotnuoi/update-detail/{{dotnuoi._id}}?_method=PUT">
+       <div class="form-group">
+            <label for="soluong">Số lượng con giống:</label>
+            <input type="text" class="form-control mt-1" id="soluong" name="soluong">
+        </div>
+        <div class="form-group">
+            <label for="ngaytuoi">Ngày tuổi:</label>
+            <input type="text" class="form-control mt-1" id="ngaytuoi" name="ngaytuoi">
+        </div>
+        <div class="form-group">
+            <label for="chatluong">Chất lượng:</label>
+            <input type="text" class="form-control mt-1" id="chatluong" name="chatluong">
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Thêm chi tiết con giống</button>
+    </form>
+</div>

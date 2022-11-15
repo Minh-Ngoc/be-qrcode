@@ -1,0 +1,92 @@
+<div class="mt-2">
+    <div>
+      <h3>Danh sách ao nuôi</h3>
+      <div class="subnav">
+        <a href="/me/trash/aonuoi">Thùng rác ({{deletedCount}})</a>
+        <a href="/aonuoi/create">Thêm ao nuôi mới</a>
+      </div>
+    </div>
+
+    <table class="table mt-4 text-center">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên ao nuôi</th>
+                <th scope="col">Diện tích</th>
+                <th scope="col">Ao Nuôi</th>
+                <th scope="col" colspan="2">Actiton</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each aonuois }}
+            <tr>
+                <th scope="row">{{sum @index 1}}</th>
+
+                <td>{{this.ten}}</td>
+                
+                <td>{{this.dientich}}</td>
+
+                <td>{{this.csntId}}</td>
+
+                
+                <td>
+                    <a href="/aonuoi/{{this._id}}/edit" class="btn btn-link">Sửa</a>
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#delete-course-modal">Xóa</a>
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="5" class="text-center">
+                Hiện chưa có ao nuôi nào.
+                <a href="/aonuoi/create">Thêm ao nuôi mới</a>
+              </td>
+            </tr>
+            {{/each}}
+
+        </tbody>
+    </table>
+</div>
+
+{{!-- Confirm delete course --}}
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa ao nuôi?</h5>
+        <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close">
+          <span class="fs-6" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa ao nuôi này?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa bỏ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Delete hidden form --}}
+<form name="delete-course-form" method="POST"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var courseId;
+        var deleteForm = document.forms['delete-course-form'];
+        var btnDeleteCourse = document.getElementById('btn-delete-course');
+
+        // When dialog confirm clicked
+        $('#delete-course-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            courseId = button.data('id');
+        });
+        
+        // When delete course btn clicked
+        btnDeleteCourse.onclick = function () {
+            deleteForm.action = '/aonuoi/' + courseId + '?_method=DELETE';
+            deleteForm.submit();
+        }
+    });
+</script>
