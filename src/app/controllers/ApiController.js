@@ -392,15 +392,16 @@ class ApiController {
                         return res.status(505).send({
                             errCode: 505,
                         });
-                    } else {
-                        CoSoNuoiTrong.updateOne({ _id: req.params.id }, req.body)
-                            .then(() => 
-                                res.status(201).send({
-                                errCode: 201,
-                                csnt: csnts
-                            }))
-                            .catch(next);
-                    }
+                    } 
+
+                    CoSoNuoiTrong.updateOne({ _id: req.params.id }, req.body)
+                        .then(() => 
+                            res.status(201).send({
+                            errCode: 201,
+                            csnt: csnts
+                        }))
+                        .catch(next);
+                    
                 })
             })
             .catch(next => {
@@ -652,61 +653,52 @@ class ApiController {
 
 
     async DotNuoiCreate (req, res, next) {
-        CoSoNuoiTrong.find({ tkId: req.body.tkId })
-            .then(csnts => {
+        console.log(req.body)
+        Promise.all([CoSoNuoiTrong.find({ tkId: req.body.tkId }), ConGiong.find({})])
+            .then(([csnts, congiongs]) => {
                 if(csnts.length === 0){
                     return res.status(504).send({
                         errCode: 504,
                         message: 'Bạn chưa có cơ sở nuôi trồng nào! Vui lòng thêm cơ sở nuôi trồng để tạo đợt nuôi!',
                     })
                 } else if (csnts !== 0) {
-                    AoNuoi.find({csntId: csnts})
-                        .then(aonuois => {
-                            if(aonuois.length === 0) {
-                                return res.status(503).send({
-                                    errCode: 503,
-                                    message: 'Bạn chưa có ao nuôi nào! Vui lòng thêm ao nuôi để tạo đợt nuôi!',
-                                })
-                            } else if(aonuois.length !== 0) {
-                                const dotnuoi = new DotNuoi({
-                                    ten: req.body.ten,
-                                    namnuoi:  req.body.namnuoi,
-                                    thoidiem: req.body.thoidiem,
-                                    trangthai: req.body.trangthai,
-                                    tinhtrang: req.body.tinhtrang,
-                                    aonuoiId: req.body.aonuoiId,
-                                    ctcongiong: {
-                                        soluong:  req.body.soluong,
-                                        ngaytuoi:  req.body.ngaytuoi,
-                                        chatluong:  req.body.chatluong,
-                                        congiongId: req.body.congiongId,
-                                    }
-                                });
-                        
-                                // save the new user
-                                dotnuoi
-                                    .save()
-                                    // return success if the new user is added to the database successfully
-                                    .then((result) => {
-                                        res.status(201).send({
-                                            errCode: 201,
-                                            message: "Thêm ao nuôi thành công",
-                                            aonuoi: aonuois,
-                                        });
-                                    })
-                                    // catch error if the new user wasn't added successfully to the database
-                                    .catch((error) => {
-                                        res.status(500).send({
-                                            errCode: 500,
-                                            message: "Thêm ao nuôi không thành công",
-                                            error,
-                                        });
-                                    });
-                            }
+                    const dotnuoi = new DotNuoi({
+                        ten: req.body.ten,
+                        namnuoi:  req.body.namnuoi,
+                        thoidiem: req.body.thoidiem,
+                        trangthai: req.body.trangthai,
+                        tinhtrang: req.body.tinhtrang,
+                        aonuoiId: req.body.aonuoiId,
+                        ctcongiong: {
+                            soluong:  req.body.soluong,
+                            ngaytuoi:  req.body.ngaytuoi,
+                            chatluong:  req.body.chatluong,
+                            congiongId: req.body.congiongId,
+                        }
+                    });
+            
+                    // save the new user
+                    dotnuoi
+                        .save()
+                        // return success if the new user is added to the database successfully
+                        .then((result) => {
+                            res.status(201).send({
+                                errCode: 201,
+                                message: "Thêm đợt nuôi thành công!",
+                                // aonuoi: aonuois,
+                            });
                         })
-                } 
-                
+                        // catch error if the new user wasn't added successfully to the database
+                        .catch((error) => {
+                            res.status(500).send({
+                                errCode: 500,
+                                message: "Thêm đợt nuôi không thành công",
+                                error,
+                            });
+                        });
+                }
             })
+                
     }
     
     async DotNuoiList (req, res, next) {
@@ -757,20 +749,27 @@ class ApiController {
 
     async NCCConGiongCreate (req, res, next) {
         console.log(req.body);
-        const ncccongiong = new NCCConGiong(req.body);
-        ncccongiong
-            .save()
-            .then(() => res.status(201).send({
-                            errCode: 201,
-                            message: 'Thêm nhà cung cấp con giống thành công!',
-                        }))
-            .catch((error) => {
-                res.status(500).send({
-                    errCode: 500,
-                    message: "Thêm nhà cung cấp con giống không thành công",
-                    error,
+        const ncccongiong = new NCCConGiong({
+                ten: req.body.ten,
+                hinhanh: req.body.hinhanh,
+                mota: req.body.mota,
+                lcgId: req.body.lcgId,
+                ncccgId: req.body.ncccgId,
+            }
+        );
+            ncccongiong
+                .save()
+                .then(() => res.status(201).send({
+                                errCode: 201,
+                                message: 'Thêm nhà cung cấp con giống thành công!',
+                            }))
+                .catch((error) => {
+                    res.status(500).send({
+                        errCode: 500,
+                        message: "Thêm nhà cung cấp con giống không thành công",
+                        error,
+                    });
                 });
-            });
     }
 
     async NCCConGiongList (req, res, next) {
@@ -842,39 +841,97 @@ class ApiController {
     }
 
     async ConGiongCreate (req, res, next) {
-        await NCCConGiong.find({})
-            .then(ncccongiongs => {
-                const congiong = new ConGiong(req.body);
-                congiong
-                    .save()
-                    .then(() => res.status(201).send({
-                                    errCode: 201,
-                                    message: 'Thêm con giống thành công!',
-                                }))
-                    .catch((error) => {
-                        res.status(500).send({
-                            errCode: 500,
-                            message: "Thêm con giống không thành công",
-                            error,
-                        });
+        console.log(req.body);
+        const congiong = new ConGiong(req.body);
+            congiong
+                .save()
+                .then(() => res.status(201).send({
+                                errCode: 201,
+                                message: 'Thêm con giống thành công!',
+                            }))
+                .catch((error) => {
+                    res.status(500).send({
+                        errCode: 500,
+                        message: "Thêm con giống không thành công",
+                        error,
                     });
-            })
+                });
     }
 
     async ConGiongList (req, res, next) {
-        await ConGiong.find({})
-            .then(congiongs => res.status(200).send({
-                    errCode: 200,
-                    congiong: congiongs,
-                })
-            )
-            .catch((error) => {
-                res.status(500).send({
-                    errCode: 500,
-                    message: "Không có con giống nào được tạo!",
-                    error,
-                });
+        ConGiong.aggregate([
+            {
+                $unwind: '$ncccgId'
+            },
+            {
+                "$lookup": {
+                "from": "ncccongiongs",
+                "localField": "ncccgId",
+                "foreignField": "_id",
+                "as": "ncccongiongs"
+                }
+            },
+            {
+                $unwind: '$ncccongiongs'
+            },
+
+            //      Ao Nuoi
+            {
+                "$lookup": {
+                    "from": "loaicongiongs",
+                    "localField": "lcgId",
+                    "foreignField": "_id",
+                    "as": "loaicongiongs"
+                }
+            },
+            {   $unwind:"$loaicongiongs" },
+
+            {
+                $group: {
+                    _id: '$_id',
+                    "ncccongiongs": { $push: "$ncccongiongs" },
+                    "loaicongiongs": { $push: "$loaicongiongs" },
+                }
+            },
+            {
+                $lookup: {
+                    from: 'congiongs',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'congiongDetails'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$congiongDetails'
+                }
+            },
+            
+
+            {
+                $addFields: {
+                    'congiongDetails.ncccongiongs': '$ncccongiongs',
+                    'congiongDetails.loaicongiongs': '$loaicongiongs',
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: '$congiongDetails'
+                }
+            },
+        ])
+        .then(congiongs => res.status(200).send({
+                errCode: 201,
+                congiong: congiongs,
+            })
+        )
+        .catch((error) => {
+            res.status(500).send({
+                errCode: 500,
+                message: "Không có con giống nào được tạo!",
+                error,
             });
+        });
     }
 
     async freeEndPoint (req, res, next) { 
