@@ -116,8 +116,6 @@ class ApiController {
 
     async scanQRCode (req, res, next) {
         // console.log(req.params.id)
-        Promise.all([
-            await DotNuoi.findById(req.params.id),
             DotNuoi.aggregate([
                 { 
                     $match: {"_id": ObjectID(`${req.params.id}`) 
@@ -223,37 +221,11 @@ class ApiController {
                     }
                 },
             ])
-            // ,
-            // function(err, data) {
-            //     if (err) throw err;
-            //     console.log(data);
-                // res.status(200).send({
-                //     dotnuois: data,
-                // })     
-            // })
-        ]) .then(([dotnuoi, dotnuoiDetail]) => {
-                if(dotnuoi.ctcongiong.length === 0) {
-                    AoNuoi.findById(dotnuoi.aonuoiId)
-                        .then(aonuoi => {
-                            dotnuoi.aonuoiId = aonuoi.ten;
-                            console.log(aonuoi.ten);
-                            res.status(200).send({
-                                dotnuoi: {
-                                    ten: dotnuoi.ten,
-                                    namnuoi: dotnuoi.namnuoi,
-                                    thoidiem: dotnuoi.thoidiem,
-                                    trangthai: dotnuoi.trangthai,
-                                    tinhtrang: dotnuoi.tinhtrang,
-                                    qrImage: dotnuoi.qrImage,
-                                    aonuoi: aonuoi.ten,
-                                },
-                            })  
-                        })
-                } else {
-                    res.status(200).send({
-                        dotnuois: dotnuoiDetail,
-                    })  
-                }
+            .then(dotnuoiDetail => {
+                console.log(dotnuoiDetail)
+                res.status(200).send({
+                    dotnuoi: dotnuoiDetail,
+                })  
             })
             .catch((error) => {
                 res.status(500).send({
@@ -707,12 +679,13 @@ class ApiController {
             .then(csnts => 
                 AoNuoi.find({csntId: csnts})
                     .then(aonuois => 
-                        DotNuoi.find({aonuoiId: aonuois})
-                            .then(dotnuois => {
-                                console.log(aonuois)
+                        Promise.all([DotNuoi.find({aonuoiId: aonuois}), ConGiong.find({})])
+                            .then(([dotnuois, congiongs]) => {
+                                console.log(aonuois);
                                 res.status(200).send({
                                     dotnuoi: dotnuois,
                                     aonuoi: aonuois,
+                                    congiong: congiongs, 
                                 })
                                     
                                 
@@ -726,7 +699,7 @@ class ApiController {
     // ------------------------------------------------------------------------------------------------
 
     async LoaiConGiongList (req, res, next) {
-        console.log(req.params)
+        // console.log(req.params)
         await LoaiConGiong.find({})
             .then(loaicongiongs => res.status(200).send({
                     errCode: 200,
@@ -748,7 +721,7 @@ class ApiController {
 
 
     async NCCConGiongCreate (req, res, next) {
-        console.log(req.body);
+        // console.log(req.body);
         const ncccongiong = new NCCConGiong({
                 ten: req.body.ten,
                 hinhanh: req.body.hinhanh,
@@ -822,7 +795,7 @@ class ApiController {
     }
 
     async NCCConGiongDelete (req, res, next) {
-        console.log(req.params.id)
+        // console.log(req.params.id)
         Promise.all([NCCConGiong.deleteOne({ _id: req.params.id }), NCCConGiong.find({})])
             .then(([ncccongiongDelete, ncccongiongs]) => {
                 // console.log(csnts)
@@ -841,7 +814,7 @@ class ApiController {
     }
 
     async ConGiongCreate (req, res, next) {
-        console.log(req.body);
+        // console.log(req.body);
         const congiong = new ConGiong(req.body);
             congiong
                 .save()
