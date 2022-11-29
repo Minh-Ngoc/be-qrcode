@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+
+require('dotenv').config();
+
 const ServerApiVersion  = require('mongoose');
 
 async function connect() {

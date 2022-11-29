@@ -4,6 +4,16 @@ const mongooseDelete = require('mongoose-delete');
 
 const Schema = mongoose.Schema;
 
+const ChiSoMoiTruong = new Schema({
+    thoidiem: { type: String, default: null},
+    chiso: { type: String, default: null},
+    ghichu: { type: String, default: null},
+    csmtId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'ChiSoMoiTruong',
+    },
+});
+
 const NhatKyXuatAo = new Schema({
     thoidiem: { type: String, default: null},
     khoiluong: { type: String, default: null},
@@ -23,15 +33,6 @@ const CTSDThuoc = new Schema({
     },
 });
 
-const ChiSoMoiTruong = new Schema({
-    thoidiem: { type: String, default: null},
-    chiso: { type: String, default: null},
-    ghichu: { type: String, default: null},
-    csmtId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'ChiSoMoiTruong',
-    },
-});
 
 const AoNuoi = new Schema(
     {

@@ -8,6 +8,7 @@ const CTConGiong = new Schema({
         congiongId: { 
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'ConGiong',
+            default: null,
         },
         soluong: { type: Number, require: null },
         ngaytuoi: { type: Number, default: null },
@@ -26,7 +27,6 @@ const DotNuoi = new Schema(
 
         ctcongiong: [CTConGiong],
         
-
         aonuoiId: { 
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'AoNuoi',

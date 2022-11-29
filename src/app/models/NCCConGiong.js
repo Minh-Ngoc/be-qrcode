@@ -6,9 +6,9 @@ const Schema = mongoose.Schema;
 
 const NCCConGiong = new Schema(
     {
-        ten: { type: String, required: true },
-        diachi: { type: String, required: true },
-        sdt: { type: String, required: true },
+        ten: { type: String, default: null },
+        diachi: { type: String, default: null },
+        sdt: { type: String, default: null },
                 
         slug: { type: String, slug: 'ten', unique: true },
     },

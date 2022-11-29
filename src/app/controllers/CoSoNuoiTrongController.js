@@ -1,4 +1,5 @@
 const CoSoNuoiTrong = require('../models/CoSoNuoiTrong');
+const TaiKhoan = require('../models/TaiKhoan');
 const { mongooseToObject } = require('../../util/mongoose');
 
 class CoSoNuoiTrongController {
@@ -18,7 +19,7 @@ class CoSoNuoiTrongController {
         res.render('cosonuoitrong/create');
     }
 
-    // [POST] /courses/store
+    // [CoSoNuoiTrong] /courses/store
     store (req, res, next) {
         // req.body.image = `https://img.youtube.com/vi/${req.body.videoId}/sddefault.jpg`;
         const cosonuoitrong = new CoSoNuoiTrong(req.body);

@@ -10,10 +10,10 @@ const ConGiong = new Schema(
         hinhanh: { type: String, default: null },
         mota: { type: String, default: null },
         lcgId: { type: mongoose.Schema.Types.ObjectId, ref: 'LoaiConGiong' },
-        ncccgId: { 
+        ncccgId: [{ 
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'NCCConGiong' 
-        },
+        }],
 
         slug: { type: String, slug: 'ten', unique: true },
     },

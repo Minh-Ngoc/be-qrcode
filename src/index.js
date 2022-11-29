@@ -1,26 +1,45 @@
+require('dotenv').config({path: __dirname + '/.env' })
+
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
 const handlebars = require('express-handlebars');
-const cors = require('cors')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
+const cors = require('cors');
 const hdb = require('handlebars');
 
 const route = require('./routes');
 const db = require('./config/db');
-const { ifError } = require('assert');
 
 const app = express();
 
-
-
 app.use(cors());
 
+app.use(express.json());
 // Connect to DB
+
 db.connect();
 
+// Curb Cores Error by adding a header here
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization",
+    );
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    );
+    next();
+  });
 
-const port = process.env.PORT || 4000;
+
+
+const port = process.env.PORT || 3000;
 
 // Use static folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,7 +49,6 @@ app.use(
         extended: true,
     }),
 );
-app.use(express.json());
 app.use(methodOverride('_method'));
 
 // HTTP logger
@@ -41,6 +59,7 @@ app.engine(
     'hbs',
     handlebars.engine({
         extname: '.hbs',
+        handlebars: allowInsecurePrototypeAccess(hdb),
         helpers: {
             sum: (a, b) => a + b,
             

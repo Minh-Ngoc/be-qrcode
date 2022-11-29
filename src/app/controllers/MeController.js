@@ -46,110 +46,159 @@ class MeController {
     }
 
     async storedDotNuois(req, res, next) {
-
-        DotNuoi.aggregate([
-            {
-                $unwind: '$ctcongiong'
-            },
-            {
-                "$lookup": {
-                "from": "congiongs",
-                "localField": "ctcongiong.congiongId",
-                "foreignField": "_id",
-                "as": "ctcongiong.congiongs"
-                }
-            },
-            {
-                $unwind: '$ctcongiong.congiongs'
-            },
-
-            //      Ao Nuoi
-            {
-                "$lookup": {
-                    "from": "aonuois",
-                    "localField": "aonuoiId",
-                    "foreignField": "_id",
-                    "as": "aonuois"
-                }
-            },
-            {   $unwind:"$aonuois" },
-
-            {
-                $group: {
-                    _id: '$_id',
-                    "ctcongiong": { $push: "$ctcongiong" },
-                    "aonuois": { $push: "$aonuois" },
-                }
-            },
-            {
-                $lookup: {
-                    from: 'dotnuois',
-                    localField: '_id',
-                    foreignField: '_id',
-                    as: 'dotnuoiDetails'
-                }
-            },
-            {
-                $unwind: {
-                    path: '$dotnuoiDetails'
-                }
-            },
+        await Promise.all([
+                DotNuoi.find({}),
+                DotNuoi.aggregate([
+                    {
+                        $unwind: '$ctcongiong'
+                    },
+                    {
+                        "$lookup": {
+                        "from": "congiongs",
+                        "localField": "ctcongiong.congiongId",
+                        "foreignField": "_id",
+                        "as": "ctcongiong.congiongs"
+                        }
+                    },
+                    {
+                        $unwind: '$ctcongiong.congiongs'
+                    },
+    
+                    //      Ao Nuoi
+                    {
+                        "$lookup": {
+                            "from": "aonuois",
+                            "localField": "aonuoiId",
+                            "foreignField": "_id",
+                            "as": "aonuois"
+                        }
+                    },
+                    {   $unwind:"$aonuois" },
+    
+                    {
+                        $group: {
+                            _id: '$_id',
+                            "ctcongiong": { $push: "$ctcongiong" },
+                            "aonuois": { $push: "$aonuois" },
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'dotnuois',
+                            localField: '_id',
+                            foreignField: '_id',
+                            as: 'dotnuoiDetails'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$dotnuoiDetails'
+                        }
+                    },
+                    
+    
+                    {
+                        $addFields: {
+                            'dotnuoiDetails.ctcongiong': '$ctcongiong',
+                            'dotnuoiDetails.aonuois': '$aonuois',
+                        }
+                    },
+                    {
+                        $replaceRoot: {
+                            newRoot: '$dotnuoiDetails'
+                        }
+                    },
+                ])
+            ])
             
-
-            {
-                $addFields: {
-                    'dotnuoiDetails.ctcongiong': '$ctcongiong',
-                    'dotnuoiDetails.aonuois': '$aonuois',
-                }
-            },
-            {
-                $replaceRoot: {
-                    newRoot: '$dotnuoiDetails'
-                }
-            },
-            
-            
-          ],
-
-        function(err, data) {
-            if (err) throw err;
-            console.log(data);
-            res.render('me/stored-dotnuois', {
-                // deletedCount,
-                dotnuois: (data),
-            })         
-        })
-
-
+            .then(([dotnuois, dotnuoiDetails]) => {
+                // dotnuois.map(dotnuoi => {
+                //     dotnuoiDetails.map(dotnuoiDetail => {
+                //         if(dotnuoi._id === dotnuoiDetail._id && dotnuoi.ctcongiong.length !== dotnuoiDetail.ctcongiong.length) {
+                //             dotnuoi.ctcongiong = dotnuoiDetail.ctcongiong
+                //         } 
+                //         // console.log(dotnuoi);
+                        
+                //     })
+                // })
+                res.render('me/stored-dotnuois', {
+                    dotnuois: dotnuois,
+                })
+            })
+            .catch(next);
    };
 
-    // async storedDotNuois(req, res, next) {
-    //     let dotnuois, congiongs, getcongiong, ctcongiongs;
-    //     let promise = [];
-    //     Promise.all([
-    //         dotnuois = await DotNuoi.find({}), 
+//    await Promise.all([
+//     DotNuoi.find({}),
+//     DotNuoi.aggregate([
+//         {
+//             $unwind: '$ctcongiong'
+//         },
+//         {
+//             "$lookup": {
+//             "from": "congiongs",
+//             "localField": "ctcongiong.congiongId",
+//             "foreignField": "_id",
+//             "as": "ctcongiong.congiongs"
+//             }
+//         },
+//         {
+//             $unwind: '$ctcongiong.congiongs'
+//         },
 
-    //         await AoNuoi.find({_id: dotnuois.aonuoiId}), 
-    //         DotNuoi.countDocumentsDeleted()
-    //     ])
-    //         .then(([dotnuois, aonuois, deletedCount]) => {
-    //             getcongiong = dotnuois.map(async (dotnuoi) => {
-    //                 ctcongiongs = dotnuoi.ctcongiong.map(async (ctcongiong) => {
-    //                     congiongs = await ConGiong.findById({_id: ctcongiong.congiongId})
-    //                     console.log(congiongs);
-    //                     return congiongs
-    //                 })
-    //                 return ctcongiongs
-    //             });
-    //             res.render('me/stored-dotnuois', {
-    //                     deletedCount,
-    //                     dotnuois: mutipleMongooseToObject(dotnuois),
-    //                     aonuois: mutipleMongooseToObject(aonuois),
-    //                 // congiongs: mutipleMongooseToObject(congiongs),
-    //             })                
-    //         })
-    //         .catch(next);
-    // }
+//         //      Ao Nuoi
+//         {
+//             "$lookup": {
+//                 "from": "aonuois",
+//                 "localField": "aonuoiId",
+//                 "foreignField": "_id",
+//                 "as": "aonuois"
+//             }
+//         },
+//         {   $unwind:"$aonuois" },
+
+//         {
+//             $group: {
+//                 _id: '$_id',
+//                 "ctcongiong": { $push: "$ctcongiong" },
+//                 "aonuois": { $push: "$aonuois" },
+//             }
+//         },
+//         {
+//             $lookup: {
+//                 from: 'dotnuois',
+//                 localField: '_id',
+//                 foreignField: '_id',
+//                 as: 'dotnuoiDetails'
+//             }
+//         },
+//         {
+//             $unwind: {
+//                 path: '$dotnuoiDetails'
+//             }
+//         },
+        
+
+//         {
+//             $addFields: {
+//                 'dotnuoiDetails.ctcongiong': '$ctcongiong',
+//                 'dotnuoiDetails.aonuois': '$aonuois',
+//             }
+//         },
+//         {
+//             $replaceRoot: {
+//                 newRoot: '$dotnuoiDetails'
+//             }
+//         },
+//     ])
+// ])
+//     .then(([dotnuois, dotnuoiDetails]) => {
+        // res.render('me/stored-dotnuois', {
+        //     // deletedCount,
+        //     dotnuois: dotnuois,
+        //     dotnuoiDetails: dotnuoiDetails
+        // })  
+//     })
 
     storedAoNuois(req, res, next) {
         Promise.all([AoNuoi.find({}), AoNuoi.countDocumentsDeleted()])

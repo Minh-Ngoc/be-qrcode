@@ -26,20 +26,20 @@
     position: fixed;
     background-color: #212529!important;
     overflow-x: hidden;
-    padding-top: 16px;
+    padding-top: 16px;   
+}
 
-    .icon-block {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      margin-right: 6px;
-      
-      i.icon-sidebar {
-        font-size: 16px!important;
-      }
-    }
+.sidebar .icon-block {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+}
+
+.icon-block i.icon-sidebar {
+  font-size: 16px!important;
 }
 
 .sidebar a {
@@ -48,10 +48,10 @@
   font-size: 16px;
   color: #818181;
   display: block;
+}
 
-  + a {
-    padding-top: 16px!important;
-  }
+.sidebar a + a {
+  padding-top: 16px!important;
 }
 
 .sidebar a:hover {

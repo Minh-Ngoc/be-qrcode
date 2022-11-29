@@ -65,13 +65,13 @@ class DotNuoiController {
         let qr;
         let updateData;
         // const url = 'https://be-qrcode.herokuapp.com';
-        const url = 'http://localhost:3000';
+        const url = 'http://localhost:3001';
 
         Promise.all([
             data = await DotNuoi.findById({_id: req.params.id}),
             console.log(data.id),
             
-            qr = await QRCode.toDataURL(url + `/testqr/` + data.id + `/qrcode`),
+            qr = await QRCode.toDataURL(url + `/scanqrcode/` + data.id),
 
             updateData = await DotNuoi.updateOne({_id: data.id}, {qrImage: qr}),
             console.log(data.qrImage)
