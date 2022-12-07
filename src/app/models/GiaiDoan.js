@@ -19,6 +19,10 @@ const GiaiDoan = new Schema(
         ten: { type: String, required: true },
         ghichu: { type: String, default: null },
         thoidiem: { type: String, default: null },
+        aonuoiId: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'ThucAn',
+        },
         
         thucan: [SDThucAn],
         

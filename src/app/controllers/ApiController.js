@@ -7,6 +7,8 @@ const DotNuoi = require('../models/DotNuoi');
 const LoaiConGiong = require('../models/LoaiConGiong');
 const NCCConGiong = require('../models/NCCConGiong');
 const ConGiong = require('../models/ConGiong');
+const GiaiDoan = require('../models/GiaiDoan');
+const ThucAn = require('../models/ThucAn');
 const  ObjectID = require('mongodb').ObjectId;
 
 class ApiController {
@@ -116,115 +118,132 @@ class ApiController {
 
     async scanQRCode (req, res, next) {
         // console.log(req.params.id)
-            DotNuoi.aggregate([
-                { 
-                    $match: {"_id": ObjectID(`${req.params.id}`) 
-                    }
-                },
-                {
-                    $unwind: '$ctcongiong'
-                },
-                {
-                    "$lookup": {
-                    "from": "congiongs",
-                    "localField": "ctcongiong.congiongId",
-                    "foreignField": "_id",
-                    "as": "ctcongiong.congiongs"
-                    }
-                },
-                {
-                    $unwind: '$ctcongiong.congiongs'
-                },
-    
-                //      Loai con giong
-                {
-                    "$lookup": {
-                        "from": "loaicongiongs",
-                        "localField": "ctcongiong.congiongs.lcgId",
+            Promise.all([
+                DotNuoi.aggregate([
+                    { 
+                        $match: {"_id": ObjectID(`${req.params.id}`) 
+                        }
+                    },
+                    {
+                        $unwind: '$ctcongiong'
+                    },
+                    {
+                        "$lookup": {
+                        "from": "congiongs",
+                        "localField": "ctcongiong.congiongId",
                         "foreignField": "_id",
-                        "as": "loaicongiongs"
-                    }
-                },
-                {   $unwind:"$loaicongiongs" },
-    
-                //      Nha cung cap con giong
-                {
-                    "$lookup": {
-                        "from": "ncccongiongs",
-                        "localField": "ctcongiong.congiongs.ncccgId",
-                        "foreignField": "_id",
-                        "as": "ncccongiongs"
-                    }
-                },
-                {   $unwind:"$ncccongiongs" },
-    
-                //      Ao Nuoi
-                {
-                    "$lookup": {
-                        "from": "aonuois",
-                        "localField": "aonuoiId",
-                        "foreignField": "_id",
-                        "as": "aonuois"
-                    }
-                },
-                {   $unwind:"$aonuois" },
-    
-                //      Co so nuoi trong
-                {
-                    "$lookup": {
-                        "from": "cosonuoitrongs",
-                        "localField": "aonuois.csntId",
-                        "foreignField": "_id",
-                        "as": "cosonuoitrongs"
-                    }
-                },
-                {   $unwind:"$cosonuoitrongs" },
-                
-                // Group ve model dotnuois
-                {
-                    $group: {
-                        _id: '$_id',
-                        "ctcongiong": { $push: "$ctcongiong" },
-                        "loaicongiongs": { $push: "$loaicongiongs" },
-                        "ncccongiongs": { $push: "$ncccongiongs" },
-                        "aonuois": { $push: "$aonuois" },
-                        "cosonuoitrongs": { $push: "$cosonuoitrongs" },
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'dotnuois',
-                        localField: '_id',
-                        foreignField: '_id',
-                        as: 'dotnuoiDetails'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$dotnuoiDetails'
-                    }
-                },
-                
-    
-                {
-                    $addFields: {
-                        'dotnuoiDetails.ctcongiong': '$ctcongiong',
-                        'dotnuoiDetails.loaicongiongs': '$loaicongiongs',
-                        'dotnuoiDetails.ncccongiongs': '$ncccongiongs',
-                        'dotnuoiDetails.aonuois': '$aonuois',
-                        'dotnuoiDetails.cosonuoitrongs': '$cosonuoitrongs',
-                    }
-                },
-                {
-                    $replaceRoot: {
-                        newRoot: '$dotnuoiDetails'
-                    }
-                },
+                        "as": "ctcongiong.congiongs"
+                        }
+                    },
+                    {
+                        $unwind: '$ctcongiong.congiongs'
+                    },
+        
+                    //      Loai con giong
+                    {
+                        "$lookup": {
+                            "from": "loaicongiongs",
+                            "localField": "ctcongiong.congiongs.lcgId",
+                            "foreignField": "_id",
+                            "as": "loaicongiongs"
+                        }
+                    },
+                    {   $unwind:"$loaicongiongs" },
+        
+                    //      Nha cung cap con giong
+                    {
+                        "$lookup": {
+                            "from": "ncccongiongs",
+                            "localField": "ctcongiong.congiongs.ncccgId",
+                            "foreignField": "_id",
+                            "as": "ncccongiongs"
+                        }
+                    },
+                    {   $unwind:"$ncccongiongs" },
+        
+                    //      Ao Nuoi
+                    {
+                        "$lookup": {
+                            "from": "aonuois",
+                            "localField": "aonuoiId",
+                            "foreignField": "_id",
+                            "as": "aonuois"
+                        }
+                    },
+                    {   $unwind:"$aonuois" },
+                    
+                    //      Giai Doan
+                    {
+                        "$lookup": {
+                            "from": "giaidoans",
+                            "localField": "aonuois._id",
+                            "foreignField": "aonuoiId",
+                            "as": "giaidoans"
+                        }
+                    },
+                    {   $unwind:"$giaidoans" },
+        
+                    //      Co so nuoi trong
+                    {
+                        "$lookup": {
+                            "from": "cosonuoitrongs",
+                            "localField": "aonuois.csntId",
+                            "foreignField": "_id",
+                            "as": "cosonuoitrongs"
+                        }
+                    },
+                    {   $unwind:"$cosonuoitrongs" },
+                    
+                    // Group ve model dotnuois
+                    {
+                        $group: {
+                            _id: '$_id',
+                            "ctcongiong": { $push: "$ctcongiong" },
+                            "loaicongiongs": { $push: "$loaicongiongs" },
+                            "ncccongiongs": { $push: "$ncccongiongs" },
+                            "aonuois": { $push: "$aonuois" },
+                            "giaidoans": { $push: "$giaidoans" },
+                            "cosonuoitrongs": { $push: "$cosonuoitrongs" },
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'dotnuois',
+                            localField: '_id',
+                            foreignField: '_id',
+                            as: 'dotnuoiDetails'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$dotnuoiDetails'
+                        }
+                    },
+                    
+        
+                    {
+                        $addFields: {
+                            'dotnuoiDetails.ctcongiong': '$ctcongiong',
+                            'dotnuoiDetails.loaicongiongs': '$loaicongiongs',
+                            'dotnuoiDetails.ncccongiongs': '$ncccongiongs',
+                            'dotnuoiDetails.aonuois': '$aonuois',
+                            'dotnuoiDetails.giaidoans': '$giaidoans',
+                            'dotnuoiDetails.cosonuoitrongs': '$cosonuoitrongs',
+                        }
+                    },
+                    {
+                        $replaceRoot: {
+                            newRoot: '$dotnuoiDetails'
+                        }
+                    },
+                ]),
+                ThucAn.find({})
             ])
-            .then(dotnuoiDetail => {
-                console.log(dotnuoiDetail)
+            .then(([dotnuoiDetail, thucans]) => {
+                console.log(thucans)
                 res.status(200).send({
                     dotnuoi: dotnuoiDetail,
+                    thucan: thucans,
                 })  
             })
             .catch((error) => {
@@ -279,6 +298,7 @@ class ApiController {
                         });
                 } else {
                     csnts.map(csnt => {
+                        let checkName;
                         if(csnt.ten === req.body.ten){
                             return res.status(505).send()
                         } else {
@@ -633,7 +653,7 @@ class ApiController {
                         errCode: 504,
                         message: 'Bạn chưa có cơ sở nuôi trồng nào! Vui lòng thêm cơ sở nuôi trồng để tạo đợt nuôi!',
                     })
-                } else if (csnts !== 0) {
+                } else if (csnts.length !== 0) {
                     const dotnuoi = new DotNuoi({
                         ten: req.body.ten,
                         namnuoi:  req.body.namnuoi,
@@ -694,6 +714,23 @@ class ApiController {
             )
     }
 
+    async DotNuoiEdit (req, res, next) {
+        DotNuoi.findById(req.params.id)
+            .then(dotnuoi => {
+                // console.log(csnts)
+                res.status(200).send({
+                    dotnuoi: dotnuoi,
+                    })
+                }
+            )
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Cập nhật không thành công!",
+                    error,
+                });
+            });
+    }
     // ------------------------------------------------------------------------------------------------
     //   ---------------------------------------  Loai Con Giong ------------------------------------------
     // ------------------------------------------------------------------------------------------------
@@ -902,6 +939,168 @@ class ApiController {
             res.status(500).send({
                 errCode: 500,
                 message: "Không có con giống nào được tạo!",
+                error,
+            });
+        });
+    }
+
+    async GiaiDoanCreate (req, res, next) {
+        const giaidoan = new GiaiDoan(req.body);
+            giaidoan
+                .save()
+                .then(() => res.status(201).send({
+                                errCode: 201,
+                                message: 'Thêm giai đoạn nuôi thành công!',
+                            }))
+                .catch((error) => {
+                    res.status(500).send({
+                        errCode: 500,
+                        message: "Thêm giai đoạn nuôi không thành công",
+                        error,
+                    });
+                });
+    }
+
+    async GiaiDoanList (req, res, next) {
+        Promise.all([
+            GiaiDoan.aggregate([
+
+            //      Ao Nuoi
+            
+            {
+                "$lookup": {
+                    "from": "aonuois",
+                    "localField": "aonuoiId",
+                    "foreignField": "_id",
+                    "as": "aonuois"
+                }
+            },
+            {   $unwind:"$aonuois" },
+            
+
+            //      Co so nuoi trong
+            {
+                "$lookup": {
+                    "from": "cosonuoitrongs",
+                    "localField": "aonuois.csntId",
+                    "foreignField": "_id",
+                    "as": "cosonuoitrongs"
+                }
+            },
+            {   $unwind:"$cosonuoitrongs" },
+            {
+                "$match": {
+                    "$and": [
+                        {
+                          "cosonuoitrongs.tkId": {
+                            "$eq": ObjectID(`${req.params.id}`)
+                          }
+                        },
+                  ]
+                }
+            },
+            
+            // Group ve model dotnuois
+            {
+                $group: {
+                    _id: '$_id',
+                    "aonuois": { $push: "$aonuois" },
+                }
+            },
+            {
+                $lookup: {
+                    from: 'giaidoans',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'giaidoanDetails'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$giaidoanDetails'
+                }
+            },
+            
+
+            {
+                $addFields: {
+                    'giaidoanDetails.aonuois': '$aonuois',
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: '$giaidoanDetails'
+                }
+            },
+        ]),
+        ThucAn.find({})
+    ])
+    
+        .then(([giaidoanDetail, thucans]) => {
+            console.log(giaidoanDetail)
+            res.status(200).send({
+                giaidoan: giaidoanDetail,
+                thucan: thucans,
+            })  
+        })
+        .catch((error) => {
+            res.status(500).send({
+                errCode: 500,
+                error,
+            });
+        });
+    }
+
+    async AddThucAnSD (req, res, next) {
+        console.log(req.params.id);
+        await GiaiDoan.updateOne(
+            {_id : req.params.id}, 
+            { $push: {
+                "thucan": {
+                    luongthucan: req.body.luongthucan,
+                    thoidiem: req.body.thoidiem,
+                    thucanId: req.body.thucanId,
+            }
+          }
+        })
+        .then(() => res.status(200).send({
+            errCode: 200,
+        }))
+        .catch(err => res.status(500).send({
+            errCode: 500,
+            err,
+        }));
+    }
+
+    async ThucAnCreate (req, res, next) {
+        // console.log(req.body);
+        const thucan = new ThucAn(req.body);
+        thucan
+            .save()
+            .then(() => res.status(201).send({
+                            errCode: 201,
+                            message: 'Thêm thức ăn thành công!',
+                        }))
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Thêm thức ăn không thành công",
+                    error,
+                });
+            });
+    }
+
+    async ThucAnList (req, res, next) {
+        ThucAn.find({})
+        .then(thucans => res.status(200).send({
+            errCode: 200,
+            thucan: thucans,
+        })
+        )
+        .catch((error) => {
+            res.status(500).send({
+                errCode: 500,
+                message: "Không có thức ăn nào được tạo!",
                 error,
             });
         });

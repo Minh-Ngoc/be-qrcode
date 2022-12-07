@@ -45,9 +45,25 @@ router.get('/congiong/:id/list', ApiController.ConGiongList);
 // Dot nuoi
 router.post('/dotnuoi/create', ApiController.DotNuoiCreate);
 router.get('/dotnuoi/:id/list', ApiController.DotNuoiList);
-// router.get('/dotnuoi/:id/edit', ApiController.DotNuoiEdit);
+router.get('/dotnuoi/:id/edit', ApiController.DotNuoiEdit);
 // router.put('/dotnuoi/:id', ApiController.DotNuoiUpdate);
 // router.delete('/dotnuoi/:id', ApiController.DotNuoiDelete);
+
+// Giai doan nuoi
+router.post('/giaidoan/create', ApiController.GiaiDoanCreate);
+router.get('/giaidoan/:id/list', ApiController.GiaiDoanList);
+router.put('/giaidoan/addthucansd/:id', ApiController.AddThucAnSD);
+
+// router.get('/giaidoan/:id/edit', ApiController.GiaiDoanEdit);
+// router.put('/giaidoan/:id', ApiController.GiaiDoanUpdate);
+// router.delete('/giaidoan/:id', ApiController.GiaiDoanDelete);
+
+// Thưc an
+router.post('/thucan/create', ApiController.ThucAnCreate);
+router.get('/thucan/:id/list', ApiController.ThucAnList);
+// router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
+// router.put('/thucan/:id', ApiController.ThucAnUpdate);
+// router.delete('/thucan/:id', ApiController.ThucAnDelete);
 
 router.get('/free-endpoint', ApiController.freeEndPoint);
 router.get('/auth-endpoint', auth, ApiController.authEndPoint);
