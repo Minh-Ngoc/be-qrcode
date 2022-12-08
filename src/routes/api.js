@@ -26,6 +26,7 @@ router.put('/aonuoi/:id', ApiController.AoNuoiUpdate);
 router.delete('/aonuoi/:id', ApiController.AoNuoiDelete);
 
 router.put('/aonuoi/addcsmtdetail/:id', ApiController.addCSMTDetail);
+router.put('/aonuoi/addthuocthuysansd/:id', ApiController.addThuocThuySanSD);
 
 // Loai Con Giong
 router.get('/loaicongiong/list', ApiController.LoaiConGiongList);
@@ -81,17 +82,14 @@ router.get('/thuocthuysan/:id/list', ApiController.ThuocThuySanList);
 // router.put('/thucan/:id', ApiController.ThucAnUpdate);
 // router.delete('/thucan/:id', ApiController.ThucAnDelete);
 
+// Thuong Lai
+router.post('/thuonglai/create', ApiController.ThuongLaiCreate);
+router.get('/thuonglai/:id/list', ApiController.ThuongLaiList);
+// router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
+// router.put('/thucan/:id', ApiController.ThucAnUpdate);
+// router.delete('/thucan/:id', ApiController.ThucAnDelete);
+
 router.get('/free-endpoint', ApiController.freeEndPoint);
 router.get('/auth-endpoint', auth, ApiController.authEndPoint);
-
-// router.get('/manage', ApiController.index);
-
-// router.get('/create', ApiController.create);
-// router.post('/store', ApiController.store);
-// router.get('/:id/edit', ApiController.edit);
-// router.put('/update-detail/:id', ApiController.updateDetail);
-// router.patch('/:id/restore', ApiController.restore);
-// router.delete('/:id', ApiController.destroy);
-// router.get('/:slug', ApiController.show);
 
 module.exports = router;

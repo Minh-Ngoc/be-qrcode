@@ -46,13 +46,6 @@ const AoNuoi = new Schema(
         chisomoitruong: [ChiSoMoiTruong],
         nhatkyxuatao: [NhatKyXuatAo],
         thuocthuysan: [CTSDThuoc],
-        // giaidoanId: { 
-        //     type: mongoose.Schema.Types.ObjectId, 
-        //     ref: 'GiaiDoan',
-        // },
-        // nhatkyxuatao: [NhatKyXuatAo],
-        // ctsdthuocId: [CTSDThuoc],
-        
 
         slug: { type: String, slug: 'ten', unique: true },
     },

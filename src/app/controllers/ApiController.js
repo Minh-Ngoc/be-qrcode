@@ -11,6 +11,7 @@ const GiaiDoan = require('../models/GiaiDoan');
 const ThucAn = require('../models/ThucAn');
 const ChiSoMoiTruong = require('../models/ChiSoMoiTruong');
 const ThuocThuySan = require('../models/ThuocThuySan');
+const ThuongLai = require('../models/ThuongLai');
 const  ObjectID = require('mongodb').ObjectId;
 
 class ApiController {
@@ -577,13 +578,15 @@ class ApiController {
                 },
                 
             ]),
-            ChiSoMoiTruong.find({})
+            ChiSoMoiTruong.find({}),
+            ThuocThuySan.find({})
         ])
-        .then(([datas, csmts]) => {
+        .then(([datas, csmts, thuocthuysans]) => {
             res.status(200).send({
                 errCode: 200,
                 dataLists: datas,
                 chisomoitruong: csmts,
+                thuocthuysan: thuocthuysans,
             }) 
         })
         .catch((error) => {
@@ -657,6 +660,27 @@ class ApiController {
                     chiso: req.body.chiso,
                     ghichu: req.body.ghichu,
                     csmtId: req.body.csmtId,
+            }
+          }
+        })
+        .then(() => res.status(200).send({
+            errCode: 200,
+        }))
+        .catch(err => res.status(500).send({
+            errCode: 500,
+            err,
+        }));
+    }
+
+    async addThuocThuySanSD (req, res, next) {
+        console.log(req.body);
+        await AoNuoi.updateOne(
+            {_id : req.params.id}, 
+            { $push: {
+                "thuocthuysan": {
+                    lieuluong: req.body.lieuluong,
+                    thoidiem: req.body.thoidiem,
+                    thuocthuysanId: req.body.thuocthuysanId,
             }
           }
         })
@@ -1218,6 +1242,44 @@ class ApiController {
                 res.status(500).send({
                     errCode: 500,
                     message: "Không có thuốc thủy sản nào được tạo!",
+                    error,
+                });
+            });
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    //   ---------------------------------------  Thuong Lai ------------------------------------------
+    // ------------------------------------------------------------------------------------------------
+
+    async ThuongLaiCreate (req, res, next) {
+        console.log(req.body);
+        const thuonglai = new ThuongLai(req.body);
+        thuonglai
+            .save()
+            .then(() => res.status(201).send({
+                            errCode: 201,
+                            message: 'Thêm thương lái thành công!',
+                        }))
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Thêm thương lái không thành công",
+                    error,
+                });
+            });
+    }
+
+    async ThuongLaiList (req, res, next) {
+        ThuongLai.find({})
+            .then(thuonglais => res.status(200).send({
+                errCode: 200,
+                thuonglai: thuonglais,
+            })
+            )
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Không có thương lái nào được tạo!",
                     error,
                 });
             });
