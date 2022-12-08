@@ -7,7 +7,6 @@ const Schema = mongoose.Schema;
 const ThuocThuySan = new Schema(
     {
         ten: { type: String, required: true },
-        ngaysudung: { type: String, default: null },
         lluongvacachsd: { type: String, default: null },
         ncc: { type: String, default: null },
         

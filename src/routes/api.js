@@ -25,6 +25,8 @@ router.get('/aonuoi/:id/edit', ApiController.AoNuoiEdit);
 router.put('/aonuoi/:id', ApiController.AoNuoiUpdate);
 router.delete('/aonuoi/:id', ApiController.AoNuoiDelete);
 
+router.put('/aonuoi/addcsmtdetail/:id', ApiController.addCSMTDetail);
+
 // Loai Con Giong
 router.get('/loaicongiong/list', ApiController.LoaiConGiongList);
 
@@ -68,6 +70,13 @@ router.get('/thucan/:id/list', ApiController.ThucAnList);
 // Chi so moi truong
 router.post('/chisomoitruong/create', ApiController.CSMTCreate);
 router.get('/chisomoitruong/:id/list', ApiController.CSMTList);
+// router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
+// router.put('/thucan/:id', ApiController.ThucAnUpdate);
+// router.delete('/thucan/:id', ApiController.ThucAnDelete);
+
+// Thuoc Thuy San
+router.post('/thuocthuysan/create', ApiController.ThuocThuySanCreate);
+router.get('/thuocthuysan/:id/list', ApiController.ThuocThuySanList);
 // router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
 // router.put('/thucan/:id', ApiController.ThucAnUpdate);
 // router.delete('/thucan/:id', ApiController.ThucAnDelete);

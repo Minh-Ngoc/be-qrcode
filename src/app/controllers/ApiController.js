@@ -10,6 +10,7 @@ const ConGiong = require('../models/ConGiong');
 const GiaiDoan = require('../models/GiaiDoan');
 const ThucAn = require('../models/ThucAn');
 const ChiSoMoiTruong = require('../models/ChiSoMoiTruong');
+const ThuocThuySan = require('../models/ThuocThuySan');
 const  ObjectID = require('mongodb').ObjectId;
 
 class ApiController {
@@ -510,80 +511,87 @@ class ApiController {
 
     async AoNuoiList (req, res, next) {        
         // console.log(req.params.id);
-        await CoSoNuoiTrong.aggregate([
-            {
-                $match: {
-                    tkId: new ObjectID(req.params.id)
-                }
-            },
-            {
-                "$lookup": {
-                "from": "cosonuoitrongs",
-                "localField": "_id",
-                "foreignField": "_id",
-                "as": "cosonuoitrongs"
-                }
-            },
-            {
-                $unwind: '$cosonuoitrongs'
-            },
-
-            {
-                "$lookup": {
-                "from": "aonuois",
-                "localField": "_id",
-                "foreignField": "csntId",
-                "as": "aonuois"
-                }
-            },
-            {
-                $unwind: '$aonuois'
-            },
-
-            {
-                $group: {
-                    _id: '$_id',
-                    "cosonuoitrongs": { $push: "$cosonuoitrongs" },
-                    "aonuois": { $push: "$aonuois" },
-                }
-            },
-            {
-                $lookup: {
-                    from: 'cosonuoitrongs',
-                    localField: '_id',
-                    foreignField: '_id',
-                    as: 'cosonuoitrongDetails'
-                }
-            },
-            {
-                $unwind: {
-                    path: '$cosonuoitrongDetails'
-                }
-            },
-            
-
-            {
-                $addFields: {
-                    'cosonuoitrongDetails.aonuois': '$aonuois',
-                    'cosonuoitrongDetails.aonuois': '$aonuois',
-                }
-            },
-            {
-                $replaceRoot: {
-                    newRoot: '$cosonuoitrongDetails'
-                }
-            },
-            
-          ]).exec( function(err, datas){
-                if (err) {
-                    return next(err);
-                } 
-                // console.log(datas)
-                res.status(200).send({
-                    errCode: 200,
-                    dataLists: datas,
-                }) 
-            })
+        Promise.all([
+            CoSoNuoiTrong.aggregate([
+                {
+                    $match: {
+                        tkId: new ObjectID(req.params.id)
+                    }
+                },
+                {
+                    "$lookup": {
+                    "from": "cosonuoitrongs",
+                    "localField": "_id",
+                    "foreignField": "_id",
+                    "as": "cosonuoitrongs"
+                    }
+                },
+                {
+                    $unwind: '$cosonuoitrongs'
+                },
+    
+                {
+                    "$lookup": {
+                    "from": "aonuois",
+                    "localField": "_id",
+                    "foreignField": "csntId",
+                    "as": "aonuois"
+                    }
+                },
+                {
+                    $unwind: '$aonuois'
+                },
+    
+                {
+                    $group: {
+                        _id: '$_id',
+                        "cosonuoitrongs": { $push: "$cosonuoitrongs" },
+                        "aonuois": { $push: "$aonuois" },
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'cosonuoitrongs',
+                        localField: '_id',
+                        foreignField: '_id',
+                        as: 'cosonuoitrongDetails'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$cosonuoitrongDetails'
+                    }
+                },
+                
+    
+                {
+                    $addFields: {
+                        'cosonuoitrongDetails.aonuois': '$aonuois',
+                        'cosonuoitrongDetails.aonuois': '$aonuois',
+                    }
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: '$cosonuoitrongDetails'
+                    }
+                },
+                
+            ]),
+            ChiSoMoiTruong.find({})
+        ])
+        .then(([datas, csmts]) => {
+            res.status(200).send({
+                errCode: 200,
+                dataLists: datas,
+                chisomoitruong: csmts,
+            }) 
+        })
+        .catch((error) => {
+            res.status(500).send({
+                errCode: 500,
+                error,
+            });
+        });
     }
 
     async AoNuoiEdit (req, res, next) {
@@ -639,6 +647,27 @@ class ApiController {
             });
     }
 
+    async addCSMTDetail (req, res, next) {
+        console.log(req.params.id);
+        await AoNuoi.updateOne(
+            {_id : req.params.id}, 
+            { $push: {
+                "chisomoitruong": {
+                    thoidiem: req.body.thoidiem,
+                    chiso: req.body.chiso,
+                    ghichu: req.body.ghichu,
+                    csmtId: req.body.csmtId,
+            }
+          }
+        })
+        .then(() => res.status(200).send({
+            errCode: 200,
+        }))
+        .catch(err => res.status(500).send({
+            errCode: 500,
+            err,
+        }));
+    }
 
     // ------------------------------------------------------------------------------------------------
     //   ---------------------------------------  Dot Nuoi ------------------------------------------
@@ -1046,7 +1075,7 @@ class ApiController {
     ])
     
         .then(([giaidoanDetail, thucans]) => {
-            console.log(giaidoanDetail)
+            // console.log(giaidoanDetail)
             res.status(200).send({
                 giaidoan: giaidoanDetail,
                 thucan: thucans,
@@ -1151,6 +1180,44 @@ class ApiController {
                 res.status(500).send({
                     errCode: 500,
                     message: "Không có chỉ số môi trường nào được tạo!",
+                    error,
+                });
+            });
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    //   ---------------------------------------  Thuoc Thuy San ------------------------------------------
+    // ------------------------------------------------------------------------------------------------
+
+    async ThuocThuySanCreate (req, res, next) {
+        console.log(req.body);
+        const thuocthuysan = new ThuocThuySan(req.body);
+        thuocthuysan
+            .save()
+            .then(() => res.status(201).send({
+                            errCode: 201,
+                            message: 'Thêm thuốc thủy sản thành công!',
+                        }))
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Thêm thuốc thủy sản không thành công",
+                    error,
+                });
+            });
+    }
+
+    async ThuocThuySanList (req, res, next) {
+        ThuocThuySan.find({})
+            .then(thuocthuysans => res.status(200).send({
+                errCode: 200,
+                thuocthuysan: thuocthuysans,
+            })
+            )
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Không có thuốc thủy sản nào được tạo!",
                     error,
                 });
             });
