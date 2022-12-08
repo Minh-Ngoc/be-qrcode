@@ -240,13 +240,17 @@ class ApiController {
                         }
                     },
                 ]),
-                ThucAn.find({})
+                ThucAn.find({}),
+                ChiSoMoiTruong.find({}),
+                ThuocThuySan.find({}),
             ])
-            .then(([dotnuoiDetail, thucans]) => {
+            .then(([dotnuoiDetail, thucans, chisomoitruongs, thuocthuysans]) => {
                 console.log(thucans)
                 res.status(200).send({
                     dotnuoi: dotnuoiDetail,
                     thucan: thucans,
+                    chisomoitruong: chisomoitruongs,
+                    thuocthuysan: thuocthuysans,
                 })  
             })
             .catch((error) => {
