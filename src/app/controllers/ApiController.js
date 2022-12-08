@@ -9,6 +9,7 @@ const NCCConGiong = require('../models/NCCConGiong');
 const ConGiong = require('../models/ConGiong');
 const GiaiDoan = require('../models/GiaiDoan');
 const ThucAn = require('../models/ThucAn');
+const ChiSoMoiTruong = require('../models/ChiSoMoiTruong');
 const  ObjectID = require('mongodb').ObjectId;
 
 class ApiController {
@@ -850,6 +851,10 @@ class ApiController {
             });
     }
 
+    // ------------------------------------------------------------------------------------------------
+    //   ---------------------------------------  Con Giong ------------------------------------------
+    // ------------------------------------------------------------------------------------------------
+
     async ConGiongCreate (req, res, next) {
         // console.log(req.body);
         const congiong = new ConGiong(req.body);
@@ -943,6 +948,10 @@ class ApiController {
             });
         });
     }
+
+    // ------------------------------------------------------------------------------------------------
+    //   ---------------------------------------  Giai Doan ------------------------------------------
+    // ------------------------------------------------------------------------------------------------
 
     async GiaiDoanCreate (req, res, next) {
         const giaidoan = new GiaiDoan(req.body);
@@ -1072,6 +1081,10 @@ class ApiController {
         }));
     }
 
+    // ------------------------------------------------------------------------------------------------
+    //   ---------------------------------------  Thuc An ------------------------------------------
+    // ------------------------------------------------------------------------------------------------
+
     async ThucAnCreate (req, res, next) {
         // console.log(req.body);
         const thucan = new ThucAn(req.body);
@@ -1092,19 +1105,60 @@ class ApiController {
 
     async ThucAnList (req, res, next) {
         ThucAn.find({})
-        .then(thucans => res.status(200).send({
-            errCode: 200,
-            thucan: thucans,
-        })
-        )
-        .catch((error) => {
-            res.status(500).send({
-                errCode: 500,
-                message: "Không có thức ăn nào được tạo!",
-                error,
+            .then(thucans => res.status(200).send({
+                errCode: 200,
+                thucan: thucans,
+            })
+            )
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Không có thức ăn nào được tạo!",
+                    error,
+                });
             });
-        });
     }
+
+    // ------------------------------------------------------------------------------------------------
+    //   ---------------------------------------  Chi So Moi Truong ------------------------------------------
+    // ------------------------------------------------------------------------------------------------
+
+    async CSMTCreate (req, res, next) {
+        const chisomoitruong = new ChiSoMoiTruong(req.body);
+        chisomoitruong
+            .save()
+            .then(() => res.status(201).send({
+                            errCode: 201,
+                            message: 'Thêm chỉ số môi trường thành công!',
+                        }))
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Thêm chỉ số môi trường không thành công",
+                    error,
+                });
+            });
+    }
+
+    async CSMTList (req, res, next) {
+        ChiSoMoiTruong.find({})
+            .then(chisomoitruongs => res.status(200).send({
+                errCode: 200,
+                chisomoitruong: chisomoitruongs,
+            })
+            )
+            .catch((error) => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Không có chỉ số môi trường nào được tạo!",
+                    error,
+                });
+            });
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    //   ---------------------------------------  Auth ------------------------------------------
+    // ------------------------------------------------------------------------------------------------
 
     async freeEndPoint (req, res, next) { 
         res.json({ message: "You are free to access me anytime" });

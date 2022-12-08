@@ -65,6 +65,13 @@ router.get('/thucan/:id/list', ApiController.ThucAnList);
 // router.put('/thucan/:id', ApiController.ThucAnUpdate);
 // router.delete('/thucan/:id', ApiController.ThucAnDelete);
 
+// Chi so moi truong
+router.post('/chisomoitruong/create', ApiController.CSMTCreate);
+router.get('/chisomoitruong/:id/list', ApiController.CSMTList);
+// router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
+// router.put('/thucan/:id', ApiController.ThucAnUpdate);
+// router.delete('/thucan/:id', ApiController.ThucAnDelete);
+
 router.get('/free-endpoint', ApiController.freeEndPoint);
 router.get('/auth-endpoint', auth, ApiController.authEndPoint);
 
