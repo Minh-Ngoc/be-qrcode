@@ -12,7 +12,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Tên con giống</th>
-                <th scope="col">Hình ảnh</th>
+                {{!-- <th scope="col">Hình ảnh</th> --}}
                 <th scope="col">Mô tả</th>
                 <th scope="col" colspan="2">Action</th>
             </tr>
@@ -22,9 +22,9 @@
             <tr>
                 <th scope="row">{{sum @index 1}}</th>
                 <td>{{this.ten}}</td>
-                <td>
+                {{!-- <td>
                   <img style="width: 100px;" src="{{this.hinhanh}}" class="img-thumbnail" alt="...">
-                </td>
+                </td> --}}
                 <td>{{this.mota}}</td>
                 <td>
                     <a href="/congiong/{{this._id}}/edit" class="btn btn-link">Sửa</a>

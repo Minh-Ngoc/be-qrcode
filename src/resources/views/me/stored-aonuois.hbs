@@ -13,25 +13,28 @@
                 <th scope="col">#</th>
                 <th scope="col">Tên ao nuôi</th>
                 <th scope="col">Diện tích</th>
-                <th scope="col">Ao Nuôi</th>
+                <th scope="col">Cơ sở nuôi trồng</th>
                 <th scope="col" colspan="2">Actiton</th>
             </tr>
         </thead>
         <tbody>
             {{#each aonuois }}
+
             <tr>
                 <th scope="row">{{sum @index 1}}</th>
 
-                <td>{{this.ten}}</td>
+                <td>{{ten}}</td>
                 
-                <td>{{this.dientich}}</td>
-
-                <td>{{this.csntId}}</td>
-
+                <td>{{dientich}}</td>
+                <td> 
+                  {{#each cosonuoitrongs}}
+                    {{ten}} 
+                  {{/each}}
+                </td>
                 
                 <td>
-                    <a href="/aonuoi/{{this._id}}/edit" class="btn btn-link">Sửa</a>
-                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#delete-course-modal">Xóa</a>
+                    <a href="/aonuoi/{{_id}}/edit" class="btn btn-link">Sửa</a>
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{_id}}" data-target="#delete-course-modal">Xóa</a>
                 </td>
             </tr>
             {{else}}

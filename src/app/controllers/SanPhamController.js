@@ -1,4 +1,5 @@
 const SanPham = require('../models/SanPham');
+const AoNuoi = require('../models/AoNuoi');
 const CongDoanCheBien = require('../models/CongDoanCheBien');
 // const CTCongDoanCheBien = require('../models/CTCongDoanCheBien');
 const { mongooseToObject, mutipleMongooseToObject } = require('../../util/mongoose');
@@ -17,10 +18,11 @@ class CDCBController {
 
     // [GET] /courses/create
     create(req, res, next) {
-        CongDoanCheBien.find({})
-            .then((congdoanchebien) =>
+        Promise.all([CongDoanCheBien.find({}), AoNuoi.find({})])
+            .then(([congdoanchebiens, aonuois]) =>
                 res.render('sanpham/create', {
-                    congdoanchebien: mutipleMongooseToObject(congdoanchebien),
+                    congdoanchebien: mutipleMongooseToObject(congdoanchebiens),
+                    aonuoi: mutipleMongooseToObject(aonuois),
                 }),
             )
             .catch(next);

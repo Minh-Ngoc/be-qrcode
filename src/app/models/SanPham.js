@@ -11,7 +11,7 @@ const CTCongDoanCheBien = new Schema({
         cdcbId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "CongDoanCheBien"
-      },
+        },
     },
 );
 
