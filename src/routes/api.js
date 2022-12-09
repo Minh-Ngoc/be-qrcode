@@ -27,6 +27,8 @@ router.delete('/aonuoi/:id', ApiController.AoNuoiDelete);
 
 router.put('/aonuoi/addcsmtdetail/:id', ApiController.addCSMTDetail);
 router.put('/aonuoi/addthuocthuysansd/:id', ApiController.addThuocThuySanSD);
+router.put('/aonuoi/addnhatkyxuatao/:id', ApiController.addNhatKyXuatAo);
+router.get('/nhatkyxuatao/:id/list', ApiController.NKXAList);
 
 // Loai Con Giong
 router.get('/loaicongiong/list', ApiController.LoaiConGiongList);

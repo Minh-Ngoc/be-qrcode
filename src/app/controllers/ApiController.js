@@ -243,14 +243,16 @@ class ApiController {
                 ThucAn.find({}),
                 ChiSoMoiTruong.find({}),
                 ThuocThuySan.find({}),
+                ThuongLai.find({}),
             ])
-            .then(([dotnuoiDetail, thucans, chisomoitruongs, thuocthuysans]) => {
+            .then(([dotnuoiDetail, thucans, chisomoitruongs, thuocthuysans, thuonglais]) => {
                 console.log(thucans)
                 res.status(200).send({
                     dotnuoi: dotnuoiDetail,
                     thucan: thucans,
                     chisomoitruong: chisomoitruongs,
                     thuocthuysan: thuocthuysans,
+                    thuonglai: thuonglais,
                 })  
             })
             .catch((error) => {
@@ -695,6 +697,114 @@ class ApiController {
             errCode: 500,
             err,
         }));
+    }
+
+    async addNhatKyXuatAo (req, res, next) {
+        console.log(req.params.id);
+        await AoNuoi.updateOne(
+            {_id : req.params.id}, 
+            { $push: {
+                "nhatkyxuatao": {
+                    thoidiem: req.body.thoidiem,
+                    khoiluong: req.body.khoiluong,
+                    ppthuhoach: req.body.ppthuhoach,
+                    thuonglaiId: req.body.thuonglaiId,
+            }
+          }
+        })
+        .then(() => res.status(200).send({
+            errCode: 200,
+        }))
+        .catch(err => res.status(500).send({
+            errCode: 500,
+            err,
+        }));
+    }
+
+    async NKXAList (req, res, next) {
+        // console.log(req.params.id);
+        AoNuoi.aggregate([
+
+            //      Ao Nuoi
+            
+            {
+                "$lookup": {
+                    "from": "thuonglais",
+                    "localField": "nhatkyxuatao.thuonglaiId",
+                    "foreignField": "_id",
+                    "as": "thuonglais"
+                }
+            },
+            {   $unwind:"$thuonglais" },
+            
+
+            //      Co so nuoi trong
+            {
+                "$lookup": {
+                    "from": "cosonuoitrongs",
+                    "localField": "csntId",
+                    "foreignField": "_id",
+                    "as": "cosonuoitrongs"
+                }
+            },
+            {   $unwind:"$cosonuoitrongs" },
+            {
+                "$match": {
+                    "$and": [
+                        {
+                        "cosonuoitrongs.tkId": {
+                            "$eq": ObjectID(`${req.params.id}`)
+                        }
+                        },
+                ]
+                }
+            },
+            
+            // Group ve model dotnuois
+            {
+                $group: {
+                    _id: '$_id',
+                    "thuonglais": { $push: "$thuonglais" },
+                }
+            },
+            {
+                $lookup: {
+                    from: 'aonuois',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'aonuoiDetails'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$aonuoiDetails'
+                }
+            },
+            
+
+            {
+                $addFields: {
+                    'aonuoiDetails.thuonglais': '$thuonglais',
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: '$aonuoiDetails'
+                }
+            },
+        ])    
+        .then(aonuoiDetails => {
+            // console.log(aonuoiDetails);
+            res.status(200).send({
+                aonuoi: aonuoiDetails,
+            })  
+        })
+        .catch((error) => {
+            res.status(500).send({
+                errCode: 500,
+                error,
+            });
+        });
     }
 
     // ------------------------------------------------------------------------------------------------
