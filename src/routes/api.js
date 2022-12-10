@@ -45,14 +45,14 @@ router.post('/congiong/create', ApiController.ConGiongCreate);
 router.get('/congiong/:id/list', ApiController.ConGiongList);
 // router.get('/congiong/:id/edit', ApiController.ConGiongEdit);
 // router.put('/congiong/:id', ApiController.ConGiongUpdate);
-// router.delete('/congiong/:id', ApiController.ConGiongDelete);
+router.delete('/congiong/:id', ApiController.ConGiongDelete);
 
 // Dot nuoi
 router.post('/dotnuoi/create', ApiController.DotNuoiCreate);
 router.get('/dotnuoi/:id/list', ApiController.DotNuoiList);
 router.get('/dotnuoi/:id/edit', ApiController.DotNuoiEdit);
 // router.put('/dotnuoi/:id', ApiController.DotNuoiUpdate);
-// router.delete('/dotnuoi/:id', ApiController.DotNuoiDelete);
+router.delete('/dotnuoi/:id', ApiController.DotNuoiDelete);
 
 // Giai doan nuoi
 router.post('/giaidoan/create', ApiController.GiaiDoanCreate);
@@ -61,7 +61,7 @@ router.put('/giaidoan/addthucansd/:id', ApiController.AddThucAnSD);
 
 // router.get('/giaidoan/:id/edit', ApiController.GiaiDoanEdit);
 // router.put('/giaidoan/:id', ApiController.GiaiDoanUpdate);
-// router.delete('/giaidoan/:id', ApiController.GiaiDoanDelete);
+router.delete('/giaidoan/:id', ApiController.GiaiDoanDelete);
 
 // Thưc an
 router.post('/thucan/create', ApiController.ThucAnCreate);
@@ -73,23 +73,23 @@ router.get('/thucan/:id/list', ApiController.ThucAnList);
 // Chi so moi truong
 router.post('/chisomoitruong/create', ApiController.CSMTCreate);
 router.get('/chisomoitruong/:id/list', ApiController.CSMTList);
-// router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
-// router.put('/thucan/:id', ApiController.ThucAnUpdate);
-// router.delete('/thucan/:id', ApiController.ThucAnDelete);
+// router.get('/chisomoitruong/:id/edit', ApiController.ThucAnEdit);
+// router.put('/chisomoitruong/:id', ApiController.ThucAnUpdate);
+router.delete('/chisomoitruong/:id', ApiController.CSMTDelete);
 
 // Thuoc Thuy San
 router.post('/thuocthuysan/create', ApiController.ThuocThuySanCreate);
 router.get('/thuocthuysan/:id/list', ApiController.ThuocThuySanList);
 // router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
 // router.put('/thucan/:id', ApiController.ThucAnUpdate);
-// router.delete('/thucan/:id', ApiController.ThucAnDelete);
+router.delete('/thuocthuysan/:id', ApiController.ThuocThuySanDelete);
 
 // Thuong Lai
 router.post('/thuonglai/create', ApiController.ThuongLaiCreate);
 router.get('/thuonglai/:id/list', ApiController.ThuongLaiList);
-// router.get('/thucan/:id/edit', ApiController.ThucAnEdit);
-// router.put('/thucan/:id', ApiController.ThucAnUpdate);
-// router.delete('/thucan/:id', ApiController.ThucAnDelete);
+// router.get('/thuonglai/:id/edit', ApiController.ThucAnEdit);
+// router.put('/thuonglai/:id', ApiController.ThucAnUpdate);
+router.delete('/thuonglai/:id', ApiController.ThuongLaiDelete);
 
 router.get('/free-endpoint', ApiController.freeEndPoint);
 router.get('/auth-endpoint', auth, ApiController.authEndPoint);

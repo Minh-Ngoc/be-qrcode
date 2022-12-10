@@ -309,7 +309,11 @@ class ApiController {
                     csnts.map(csnt => {
                         let checkName;
                         if(csnt.ten === req.body.ten){
-                            return res.status(505).send()
+                            return res.status(501).send({
+                                errCode: 501,
+                                message: "Thêm cơ sở nuôi trồng không thành công",
+                                error,
+                            });
                         } else {
                             // create a new user instance and collect the data
                             const cosonuoitrong = new CoSoNuoiTrong({
@@ -328,20 +332,14 @@ class ApiController {
                                 .save()
                                 // return success if the new user is added to the database successfully
                                 .then((result) => {
-                                    res.status(201).send({
+                                    return res.status(201).send({
                                         errCode: 201,
                                         message: "Thêm cơ sở nuôi trồng thành công",
                                         result,
                                     });
                                 })
                                 // catch error if the new user wasn't added successfully to the database
-                                .catch((error) => {
-                                    res.status(501).send({
-                                        errCode: 501,
-                                        message: "Thêm cơ sở nuôi trồng không thành công",
-                                        error,
-                                    });
-                                });
+                                .catch((error) => new Error())
                         }
                     })
                 }
@@ -899,6 +897,22 @@ class ApiController {
                 });
             });
     }
+
+    async DotNuoiDelete (req, res, next) {
+        DotNuoi.deleteOne({ _id: req.params.id })
+            .then(() => {
+                    res.status(201).send({
+                        errCode: 201,
+                    })
+                }
+            )
+            .catch(next => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Xóa không thành công!",
+                });
+            });
+    }
     // ------------------------------------------------------------------------------------------------
     //   ---------------------------------------  Loai Con Giong ------------------------------------------
     // ------------------------------------------------------------------------------------------------
@@ -927,14 +941,7 @@ class ApiController {
 
     async NCCConGiongCreate (req, res, next) {
         // console.log(req.body);
-        const ncccongiong = new NCCConGiong({
-                ten: req.body.ten,
-                hinhanh: req.body.hinhanh,
-                mota: req.body.mota,
-                lcgId: req.body.lcgId,
-                ncccgId: req.body.ncccgId,
-            }
-        );
+        const ncccongiong = new NCCConGiong(req.body);
             ncccongiong
                 .save()
                 .then(() => res.status(201).send({
@@ -1116,6 +1123,21 @@ class ApiController {
         });
     }
 
+    async ConGiongDelete (req, res, next) {
+        ConGiong.deleteOne({ _id: req.params.id })
+            .then(() => {
+                    res.status(201).send({
+                        errCode: 201,
+                    })
+                }
+            )
+            .catch(next => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Xóa không thành công!",
+                });
+            });
+    }
     // ------------------------------------------------------------------------------------------------
     //   ---------------------------------------  Giai Doan ------------------------------------------
     // ------------------------------------------------------------------------------------------------
@@ -1227,6 +1249,22 @@ class ApiController {
         });
     }
 
+    async GiaiDoanDelete (req, res, next) {
+        GiaiDoan.deleteOne({ _id: req.params.id })
+            .then(() => {
+                    res.status(201).send({
+                        errCode: 201,
+                    })
+                }
+            )
+            .catch(next => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Xóa không thành công!",
+                });
+            });
+    }
+
     async AddThucAnSD (req, res, next) {
         console.log(req.params.id);
         await GiaiDoan.updateOne(
@@ -1323,6 +1361,21 @@ class ApiController {
             });
     }
 
+    async CSMTDelete (req, res, next) {
+        ChiSoMoiTruong.deleteOne({ _id: req.params.id })
+            .then(() => {
+                    res.status(201).send({
+                        errCode: 201,
+                    })
+                }
+            )
+            .catch(next => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Xóa không thành công!",
+                });
+            });
+    }
     // ------------------------------------------------------------------------------------------------
     //   ---------------------------------------  Thuoc Thuy San ------------------------------------------
     // ------------------------------------------------------------------------------------------------
@@ -1361,6 +1414,21 @@ class ApiController {
             });
     }
 
+    async ThuocThuySanDelete (req, res, next) {
+        ThuocThuySan.deleteOne({ _id: req.params.id })
+            .then(() => {
+                    res.status(201).send({
+                        errCode: 201,
+                    })
+                }
+            )
+            .catch(next => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Xóa không thành công!",
+                });
+            });
+    }
     // ------------------------------------------------------------------------------------------------
     //   ---------------------------------------  Thuong Lai ------------------------------------------
     // ------------------------------------------------------------------------------------------------
@@ -1399,6 +1467,21 @@ class ApiController {
             });
     }
 
+    async ThuongLaiDelete (req, res, next) {
+        ThuongLai.deleteOne({ _id: req.params.id })
+            .then(() => {
+                    res.status(201).send({
+                        errCode: 201,
+                    })
+                }
+            )
+            .catch(next => {
+                res.status(500).send({
+                    errCode: 500,
+                    message: "Xóa không thành công!",
+                });
+            });
+    }
     // ------------------------------------------------------------------------------------------------
     //   ---------------------------------------  Auth ------------------------------------------
     // ------------------------------------------------------------------------------------------------
