@@ -306,42 +306,44 @@ class ApiController {
                             });
                         });
                 } else {
+                    let checkName;
                     csnts.map(csnt => {
-                        let checkName;
-                        if(csnt.ten === req.body.ten){
-                            return res.status(501).send({
-                                errCode: 501,
-                                message: "Thêm cơ sở nuôi trồng không thành công",
-                                error,
-                            });
-                        } else {
-                            // create a new user instance and collect the data
-                            const cosonuoitrong = new CoSoNuoiTrong({
-                                ten: req.body.ten,
-                                chusohuu: req.body.chusohuu,
-                                diachi: req.body.diachi,
-                                sdt: req.body.sdt,
-                                dientich: req.body.dientich,
-                                dtmatnuoc: req.body.dtmatnuoc,
-                                namdangky: req.body.namdangky,
-                                tkId: req.body.tkId,
-                            });
-                    
-                            // save the new user
-                            cosonuoitrong
-                                .save()
-                                // return success if the new user is added to the database successfully
-                                .then((result) => {
-                                    return res.status(201).send({
-                                        errCode: 201,
-                                        message: "Thêm cơ sở nuôi trồng thành công",
-                                        result,
-                                    });
-                                })
-                                // catch error if the new user wasn't added successfully to the database
-                                .catch((error) => new Error())
+                        if(csnt.ten === req.body.ten) {
+                            checkName = 1;
                         }
                     })
+                    if(checkName === 1) {
+                        return res.status(501).send({
+                            errCode: 501,
+                            message: "Thêm cơ sở nuôi trồng không thành công",
+                        });
+                    } else {
+                        // create a new user instance and collect the data
+                        const cosonuoitrong = new CoSoNuoiTrong({
+                            ten: req.body.ten,
+                            chusohuu: req.body.chusohuu,
+                            diachi: req.body.diachi,
+                            sdt: req.body.sdt,
+                            dientich: req.body.dientich,
+                            dtmatnuoc: req.body.dtmatnuoc,
+                            namdangky: req.body.namdangky,
+                            tkId: req.body.tkId,
+                        });
+                
+                        // save the new user
+                        cosonuoitrong
+                            .save()
+                            // return success if the new user is added to the database successfully
+                            .then((result) => {
+                                return res.status(201).send({
+                                    errCode: 201,
+                                    message: "Thêm cơ sở nuôi trồng thành công",
+                                    result,
+                                });
+                            })
+                            // catch error if the new user wasn't added successfully to the database
+                            .catch((error) => new Error())
+                    }
                 }
             })
         
@@ -383,25 +385,29 @@ class ApiController {
     }
 
     async CSNTUpdate(req, res, next) {
-        // console.log(await CoSoNuoiTrong.find({tkId: req.body.tkId}))
+        console.log(req.params.id);
         await CoSoNuoiTrong.find({tkId: req.body.tkId})
             .then(csnts => {
+                let checkName;
                 csnts.map(csnt => {
-                    if(csnt.ten === req.body.ten){
-                        return res.status(505).send({
-                            errCode: 505,
-                        });
-                    } 
-
-                    CoSoNuoiTrong.updateOne({ _id: req.params.id }, req.body)
-                        .then(() => 
-                            res.status(201).send({
-                            errCode: 201,
-                            csnt: csnts
-                        }))
-                        .catch(next);
-                    
+                    if( req.params.id !== csnt._id && req.body.ten === csnt.ten ) {
+                        checkName = 1;
+                    }
                 })
+
+                if(req.body.presentName !== req.body.ten && checkName === 1){
+                    return res.status(505).send({
+                        errCode: 505,
+                    });
+                }
+
+                CoSoNuoiTrong.updateOne({ _id: req.params.id }, req.body)
+                    .then(() => 
+                        res.status(201).send({
+                        errCode: 201,
+                        csnt: csnts
+                    }))
+                    .catch(next);
             })
             .catch(next => {
                 res.status(500).send({
