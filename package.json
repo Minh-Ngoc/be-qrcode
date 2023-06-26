@@ -20,6 +20,9 @@
       "pre-commit": "lint-staged"
     }
   },
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
     "argon2": "^0.30.2",
