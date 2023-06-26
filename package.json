@@ -21,7 +21,7 @@
     }
   },
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
