@@ -6,8 +6,10 @@ const ServerApiVersion  = require('mongoose');
 
 async function connect() {
     try {
-        const url = 'mongodb://localhost:27017/lvtn_qrcode';
-        // const url = 'mongodb+srv://ngocminh101100:Minh1805701@cluster0.7kdyflp.mongodb.net/?retryWrites=true&w=majority'
+        // const url = 'mongodb://localhost:27017/lvtn_qrcode';
+        
+        const url = 'mongodb+srv://ngocminh101100:hucP6zsRir059b14@cluster0.7kdyflp.mongodb.net/?retryWrites=true&w=majority'
+        mongoose.set("strictQuery", false);
         await mongoose.connect(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
