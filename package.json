@@ -20,18 +20,6 @@
       "pre-commit": "lint-staged"
     }
   },
-  "engines": {
-    "node": "18.x"
-  },
-  {
-    "version": 2,
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "vercel-sapper"
-      }
-    ]
-  },
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
     "argon2": "^0.30.2",
